@@ -1,15 +1,15 @@
-import LeftSidebar from "@/components/shared/LeftSidebar"
+import LeftSidebar from "@/components/shared/LeftSidebar";
 import Sidebar from "@/components/shared/Sidebar";
-import React from "react"
+import React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="relative flex">
+    <main className="flex flex-1">
       <LeftSidebar />
       <Sidebar />
-      <div>{children}</div>
+      <div className="mx-auto w-full">{children}</div>
     </main>
-  )
-}
+  );
+};
 
 export default Layout;
