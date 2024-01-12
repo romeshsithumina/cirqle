@@ -4,7 +4,7 @@ import React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="flex flex-1">
+    <main className="flex">
       <LeftSidebar />
       <Sidebar />
       <div className="mx-auto w-full">{children}</div>
