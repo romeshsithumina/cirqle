@@ -49,7 +49,11 @@ const users = [
   },
 ];
 
-export function Combobox() {
+interface ComboboxProps {
+  onUserSelect: (value: string) => void;
+}
+
+export function Combobox({ onUserSelect }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -80,6 +84,7 @@ export function Combobox() {
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
+                  onUserSelect(currentValue);
                 }}
               >
                 {user.label}
