@@ -22,6 +22,9 @@ const config: Config = {
           strong: "#1cc850",
           light: "#e8f9ed",
         },
+        ash: {
+          strong: "#c6bfc3",
+        },
       },
     },
     fontFamily: {
