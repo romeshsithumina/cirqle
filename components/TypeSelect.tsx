@@ -10,13 +10,18 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 import { SelectLabel } from "@radix-ui/react-select";
 import { useState } from "react";
 
-const TypeSelect = () => {
+interface TypeSelectProps {
+  onTypeChange: (value: string) => void;
+}
+
+const TypeSelect = ({ onTypeChange }: TypeSelectProps) => {
   const [value, setValue] = useState("");
 
   return (
     <Select
       onValueChange={(value) => {
         setValue(capitalizeFirstLetter(value));
+        onTypeChange(value);
       }}
     >
       <SelectTrigger className="w-full">
