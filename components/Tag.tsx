@@ -1,11 +1,15 @@
+"use client";
+
 import { capitalizeFirstLetter } from "@/lib/utils";
 
 interface TagProps {
   name: string;
   clickable?: boolean;
+  selected: string;
+  onTagSelect?: (value: string) => void;
 }
 
-const Tag = ({ name, clickable }: TagProps) => {
+const Tag = ({ name, clickable, selected, onTagSelect }: TagProps) => {
   const getClassname = () => {
     switch (name) {
       case "bug":
@@ -29,14 +33,31 @@ const Tag = ({ name, clickable }: TagProps) => {
     }
   };
 
+  const getSelectedClassname = () => {
+    switch (selected) {
+      case "bug":
+        return "bg-red-strong text-white";
+      case "improvement":
+        return "bg-green-strong text-white";
+      case "feature":
+        return "bg-blue-strong text-white";
+    }
+  };
+
+  const handleClick = () => {
+    onTagSelect?.(name);
+  };
+
   return (
     <div>
       <div
         className={`rounded-lg border-none px-2 py-1 text-[12px] font-semibold ${
           clickable ? "cursor-pointer" : ""
         }
-        ${getClassname()}
+        ${getClassname()} 
+        ${name === selected ? getSelectedClassname() : ""}
         `}
+        onClick={handleClick}
       >
         {name ? capitalizeFirstLetter(name) : ""}
       </div>
