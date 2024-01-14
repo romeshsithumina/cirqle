@@ -19,6 +19,7 @@ import { useState } from "react";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import { Combobox } from "./Combobox";
+import TypeSelect from "./TypeSelect";
 
 const IssueDialog = () => {
   const [age, setAge] = useState("");
@@ -58,20 +59,23 @@ const IssueDialog = () => {
               rows={4}
             />
           </div>
-          <div className="col-start-2 row-span-2 row-start-1">
+          <div className="col-start-2 row-span-3 row-start-1">
             <ImageUpload />
           </div>
-          <div className="col-start-2 mt-5 flex items-center justify-center px-5">
-            <InputLabel className="w-[110px]">Priority</InputLabel>
+          <div className="col-start-2 row-start-4 w-full">
+            <TypeSelect />
+          </div>
+          <div className="col-start-1 row-start-3 mt-5 flex items-center justify-center px-5">
+            <InputLabel className="w-[80px]">Type</InputLabel>
             <div className="flex w-full gap-4">
               <div className="flex w-full  justify-around">
-                <Tag />
-                <Tag />
-                <Tag />
+                <Tag name="bug" clickable />
+                <Tag name="feature" clickable />
+                <Tag name="improvement" clickable />
               </div>
             </div>
           </div>
-          <div className="col-start-1 row-start-3 w-full">
+          <div className="col-start-1 row-start-4 w-full">
             <Combobox />
           </div>
         </div>
