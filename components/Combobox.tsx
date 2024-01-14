@@ -19,16 +19,34 @@ import {
 } from "@/components/ui/popover";
 
 const users = [
-  { value: "John", label: "John" },
-  { value: "Jane", label: "Jane" },
-  { value: "Alice", label: "Alice" },
-  { value: "Bob", label: "Bob" },
-  { value: "Charlie", label: "Charlie" },
-  { value: "Diana", label: "Diana" },
-  { value: "Eva", label: "Eva" },
-  { value: "Frank", label: "Frank" },
-  { value: "Grace", label: "Grace" },
-  { value: "Harry", label: "Harry" },
+  {
+    value: "bob",
+    label: "Bob",
+  },
+  {
+    value: "john",
+    label: "John",
+  },
+  {
+    value: "alice",
+    label: "Alice",
+  },
+  {
+    value: "harry",
+    label: "Harry",
+  },
+  {
+    value: "eva",
+    label: "Eva",
+  },
+  {
+    value: "diana",
+    label: "Diana",
+  },
+  {
+    value: "grace",
+    label: "Grace",
+  },
 ];
 
 export function Combobox() {
@@ -55,20 +73,20 @@ export function Combobox() {
           <CommandInput placeholder="Search developers..." className="h-9" />
           <CommandEmpty>No user found.</CommandEmpty>
           <CommandGroup className="h-[130px] overflow-auto">
-            {users.map((framework) => (
+            {users.map((user) => (
               <CommandItem
-                key={framework.value}
-                value={framework.value}
+                key={user.value}
+                value={user.value}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
                 }}
               >
-                {framework.label}
+                {user.label}
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
+                    value === user.value ? "opacity-100" : "opacity-0"
                   )}
                 />
               </CommandItem>
