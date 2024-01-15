@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Combobox } from "./Combobox";
@@ -28,20 +29,20 @@ const IssueDialog = () => {
   } = useForm();
   const [selectedTag, setSelectedTag] = useState("");
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     // Handle form submission here
-    console.log(data); // Captured form data
+    axios.post("/api/issues", data).catch((e) => console.log(e));
   };
 
   // Callback function to update the form value when TypeSelect changes
   const handleTypeChange = (value) => {
-    setValue("type", value); // Assuming "type" is the field name in your form
+    setValue("priority", value); // Assuming "type" is the field name in your form
   };
   const handleUserSelect = (value) => {
     setValue("user", value);
   };
   const handleTagSelect = (value) => {
-    setValue("tag", value);
+    setValue("type", value);
     setSelectedTag(value);
   };
 
