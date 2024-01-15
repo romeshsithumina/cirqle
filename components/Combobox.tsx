@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 
-import { cn } from "@/lib/utils";
+import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,45 +17,72 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getDevelopers } from "@/lib/actions/getUsers";
 
-const users = [
-  {
-    value: "bob",
-    label: "Bob",
-  },
-  {
-    value: "john",
-    label: "John",
-  },
-  {
-    value: "alice",
-    label: "Alice",
-  },
-  {
-    value: "harry",
-    label: "Harry",
-  },
-  {
-    value: "eva",
-    label: "Eva",
-  },
-  {
-    value: "diana",
-    label: "Diana",
-  },
-  {
-    value: "grace",
-    label: "Grace",
-  },
-];
+// const users = [
+//   {
+//     value: "bob",
+//     label: "Bob",
+//   },
+//   {
+//     value: "john",
+//     label: "John",
+//   },
+//   {
+//     value: "alice",
+//     label: "Alice",
+//   },
+//   {
+//     value: "harry",
+//     label: "Harry",
+//   },
+//   {
+//     value: "eva",
+//     label: "Eva",
+//   },
+//   {
+//     value: "diana",
+//     label: "Diana",
+//   },
+//   {
+//     value: "grace",
+//     label: "Grace",
+//   },
+// ];
 
 interface ComboboxProps {
   onUserSelect: (value: string) => void;
 }
 
+interface User {
+  id: number;
+  clerkID: string;
+  name: string;
+  email: string;
+  password: string | null;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export function Combobox({ onUserSelect }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+  const [users, setUsers] = React.useState<User[]>([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const developers = await getDevelopers();
+        setUsers(developers);
+        console.log(developers);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
@@ -67,7 +94,7 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
           className="min-w-full justify-between"
         >
           {value
-            ? users.find((user) => user.value === value)?.label
+            ? `Assigned to: ${capitalizeFirstLetter(value)}`
             : "Assigned to..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -79,19 +106,19 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
           <CommandGroup className="h-[130px] overflow-auto">
             {users.map((user) => (
               <CommandItem
-                key={user.value}
-                value={user.value}
+                key={user.id}
+                value={user.name}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
                   onUserSelect(currentValue);
                 }}
               >
-                {user.label}
+                {user.name}
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === user.value ? "opacity-100" : "opacity-0"
+                    value === user.name ? "opacity-100" : "opacity-0"
                   )}
                 />
               </CommandItem>
