@@ -25,7 +25,7 @@ const TypeSelect = ({ onTypeChange }: TypeSelectProps) => {
       }}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Type">Priority: {value}</SelectValue>
+        <SelectValue placeholder="Priority...">Priority: {value}</SelectValue>
       </SelectTrigger>
       <SelectContent className="bg-white">
         <SelectGroup>
