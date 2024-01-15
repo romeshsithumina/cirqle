@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Issue {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  status      String    @default("wip")
+  priority    String
+  type        String
+  assignedTo  User?     @relation(fields: [assignedToId], references: [id])
+  assignedToId Int?
+  project     Project   @relation(fields: [projectId], references: [id])
+  projectId    Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt  @default(now())
+  attachments Attachment[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  clerkID   String
+  name      String
+  email     String   @unique
+  password  String?
+  role      String
+  issues    Issue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  issues      Issue[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt  @default(now())
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  issue     Issue    @relation(fields: [issueId], references: [id])
+  issueId   Int
+  filename  String
+  mimetype  String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}

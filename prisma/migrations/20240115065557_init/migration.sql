@@ -1,0 +1,29 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- CreateTable
+CREATE TABLE [dbo].[Issue] (
+    [id] INT NOT NULL IDENTITY(1,1),
+    [title] NVARCHAR(1000) NOT NULL,
+    [description] NVARCHAR(1000),
+    [status] NVARCHAR(1000) NOT NULL,
+    [priority] NVARCHAR(1000) NOT NULL,
+    [assignedTo] NVARCHAR(1000),
+    [assignedToId] INT,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Issue_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT [Issue_pkey] PRIMARY KEY CLUSTERED ([id])
+);
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH
