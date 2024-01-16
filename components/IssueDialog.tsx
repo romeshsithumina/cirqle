@@ -30,16 +30,17 @@ const IssueDialog = () => {
   const [selectedTag, setSelectedTag] = useState("");
 
   const onSubmit = (data: any) => {
+    console.log(data);
     // Handle form submission here
     axios.post("/api/issues", data).catch((e) => console.log(e));
   };
 
   // Callback function to update the form value when TypeSelect changes
-  const handleTypeChange = (value) => {
+  const handleTypeChange = (value: string) => {
     setValue("priority", value); // Assuming "type" is the field name in your form
   };
   const handleUserSelect = (value) => {
-    setValue("user", value);
+    setValue("assignedTo", value);
   };
   const handleTagSelect = (value) => {
     setValue("type", value);

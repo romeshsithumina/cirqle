@@ -51,7 +51,7 @@ import { getDevelopers } from "@/lib/actions/getUsers";
 // ];
 
 interface ComboboxProps {
-  onUserSelect: (value: string) => void;
+  onUserSelect: (value: number) => void;
 }
 
 interface User {
@@ -75,7 +75,6 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
       try {
         const developers = await getDevelopers();
         setUsers(developers);
-        console.log(developers);
       } catch (error) {
         console.log(error);
       }
@@ -111,7 +110,7 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue);
                   setOpen(false);
-                  onUserSelect(currentValue);
+                  onUserSelect(user.id);
                 }}
               >
                 {user.name}
