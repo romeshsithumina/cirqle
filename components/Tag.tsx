@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 interface TagProps {
   name: string;
   clickable?: boolean;
-  selected: string;
+  selected?: string;
   onTagSelect?: (value: string) => void;
 }
 
