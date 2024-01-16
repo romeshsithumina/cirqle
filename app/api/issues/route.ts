@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   const currentUser = await prisma.user
     .findUnique({
       where: {
-        id: 3,
+        id: 2,
       },
     })
     .catch((e: any) => console.log(e));
@@ -23,7 +23,16 @@ export async function POST(request: Request) {
         description,
         priority,
         type,
-        assignedTo,
+        author: {
+          connect: {
+            id: currentUser.id,
+          },
+        },
+        assignedTo: {
+          connect: {
+            id: assignedTo,
+          },
+        },
         project: {
           connect: {
             id: 1,
@@ -38,24 +47,7 @@ export async function POST(request: Request) {
       await prisma.$disconnect();
     });
 
-  // // console.log(newIssue);
-
-  const updatedUser = await prisma.user
-    .update({
-      where: { id: currentUser.id },
-      data: {
-        issues: {
-          connect: {
-            id: newIssue.id,
-          },
-        },
-      },
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
-
-  console.log("Updated user with new issue:", updatedUser);
+  console.log(newIssue);
 
   return NextResponse.json(newIssue);
 }
