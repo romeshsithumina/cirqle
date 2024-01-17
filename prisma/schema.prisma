@@ -12,6 +12,7 @@ datasource db {
 
 model Issue {
   id           Int          @id @default(autoincrement())
+  uuid         String       @unique
   title        String
   description  String?
   status       String       @default("wip")
