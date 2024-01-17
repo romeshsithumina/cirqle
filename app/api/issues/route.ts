@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
+import { customAlphabet } from "nanoid";
 
 export async function POST(request: Request) {
   const currentUser = await prisma.user
@@ -12,6 +13,10 @@ export async function POST(request: Request) {
 
   console.log(currentUser);
 
+  const alphabet =
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const nanoid = customAlphabet(alphabet, 20);
+
   const body = await request.json();
 
   const { title, description, type, priority, assignedTo } = body;
@@ -19,6 +24,7 @@ export async function POST(request: Request) {
   const newIssue = await prisma.issue
     .create({
       data: {
+        uuid: nanoid(),
         title,
         description,
         priority,
