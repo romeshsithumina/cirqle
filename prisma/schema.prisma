@@ -15,7 +15,7 @@ model Issue {
   uuid         String       @unique
   title        String
   description  String?
-  status       String       @default("wip")
+  status       String       @default("todo")
   priority     String
   type         String
   author       User         @relation(name: "Author", fields: [authorId], references: [id])
