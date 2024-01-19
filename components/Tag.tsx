@@ -22,12 +22,9 @@ const Tag = ({ name, clickable, selected, onTagSelect }: TagProps) => {
     bug: "border-none bg-red-light text-red-strong",
     improvement: "border-none bg-green-light text-green-strong",
     feature: "border-none bg-blue-light text-blue-strong",
-    wip: "border-none bg-blue-strong text-white",
-    "wip outline": "border-blue-strong border text-blue-strong",
-    done: "border-none bg-green-strong text-white",
-    "done outline": "border-green-strong border text-green-strong",
-    todo: "border-none bg-ash-strong text-white",
-    "todo outline": "border-ash-strong border text-ash-strong",
+    wip: "border-blue-strong border text-blue-strong",
+    done: "border-green-strong border text-green-strong",
+    todo: "border-ash-strong border text-ash-strong",
     high: "border-none bg-red-light text-red-strong",
     low: "border-none bg-green-light text-green-strong",
     medium: "border-none bg-blue-light text-blue-strong",
@@ -37,6 +34,9 @@ const Tag = ({ name, clickable, selected, onTagSelect }: TagProps) => {
     bug: "bg-red-strong text-white",
     improvement: "bg-green-strong text-white",
     feature: "bg-blue-strong text-white",
+    todo: "border-none bg-ash-strong text-white",
+    wip: "border-none bg-blue-strong text-white",
+    done: "border-none bg-green-strong text-white",
   };
 
   const handleClick = () => {
