@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <main className="flex">
       <LeftSidebar />
       <Sidebar />
-      <div className="">{children}</div>
+      <div className="grow">{children}</div>
     </main>
   );
 };
