@@ -6,7 +6,7 @@ import IssueCard from "../IssueCard";
 import Navbar from "./Navbar";
 
 interface Issue {
-  id: number;
+  uuid: string;
   title: string;
   type: string;
   author: {
@@ -26,7 +26,6 @@ const Sidebar = () => {
         if (res) {
           setIssues(res);
         }
-        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -43,7 +42,8 @@ const Sidebar = () => {
         <div className="max-h-[calc(100vh-67px)] overflow-y-auto">
           {issues.map((issue) => (
             <IssueCard
-              key={issue.id}
+              key={issue.uuid}
+              uuid={issue.uuid}
               issueName={issue.title}
               issueType={issue.type}
               issueStatus={issue.status}

@@ -4,7 +4,7 @@ import Tag from "@/components/Tag";
 
 const Page = () => {
   return (
-    <div className="left-0 top-0 flex h-screen px-8 py-6">
+    <div className="left-0 top-0 h-screen px-8 py-6">
       <div className="flex flex-col">
         <div className="flex items-center gap-5">
           <Tag name="improvement" />
@@ -14,7 +14,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="mt-7 flex items-center">
+        <div className="mt-4 flex items-center border-b pb-3">
           <div className="flex flex-nowrap gap-2 text-[0.87rem]">
             <span className="">Mark Johnson</span>
             <span className="">·</span>
@@ -27,7 +27,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="mt-7 ">
+        <div className="mt-7 max-w-[1000px]">
           <div className="font-medium">Issue</div>
           <div className="mt-5 text-sm text-slate-600">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nobis odit
@@ -36,11 +36,15 @@ const Page = () => {
             rem corporis magni voluptates nihil?
           </div>
         </div>
-        <div className="mt-7 ">
+        <div className="mt-7">
           <div className="font-medium">Images</div>
           <div className="mt-5 text-sm text-slate-600">
             <ImageDisplay value="/assets/test.png" />
           </div>
+        </div>
+        <div className="mt-7">
+          <div className="font-medium">Assigned to: </div>
+          <div className="mt-5 text-sm text-slate-600">Mark Rober</div>
         </div>
       </div>
     </div>
