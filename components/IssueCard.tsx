@@ -1,6 +1,8 @@
+import { useRouter } from "next/navigation";
 import Tag from "./Tag";
 
 interface IssueCardProps {
+  uuid: string;
   issueName: string;
   authorName?: string;
   issueType: string;
@@ -9,14 +11,22 @@ interface IssueCardProps {
 }
 
 const IssueCard = ({
+  uuid,
   issueName,
   authorName,
   issueType,
   issuePriority,
   issueStatus,
 }: IssueCardProps) => {
+  const router = useRouter();
+
   return (
-    <div className="h-[90px] border-b-[1px]">
+    <div
+      className="h-[90px] cursor-pointer border-b-[1px]"
+      onClick={() => {
+        router.push(`/issue/${uuid}`);
+      }}
+    >
       <div className="flex h-full w-full">
         <div className="flex h-full flex-col justify-center pl-6">
           <div className="font-medium">{issueName}</div>
@@ -27,10 +37,9 @@ const IssueCard = ({
             <div className="flex-row text-sm text-slate-600">{authorName}</div>
           </div>
         </div>
-
         <div className="ml-auto flex items-center">
           <div className="pr-6">
-            <Tag name="wip" />
+            <Tag name={issueStatus!} />
           </div>
         </div>
       </div>
