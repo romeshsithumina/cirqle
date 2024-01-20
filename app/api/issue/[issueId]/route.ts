@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prismadb";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 interface IParams {
@@ -10,7 +11,7 @@ interface IParams {
 export async function POST(request: Request, { params }: { params: IParams }) {
   const body = await request.json();
 
-  const { status } = body;
+  const { status, pathname } = body;
   const { issueId } = params;
 
   const updatedIssue = await prisma.issue
@@ -32,5 +33,6 @@ export async function POST(request: Request, { params }: { params: IParams }) {
 
   console.log("Updated issue is ", updatedIssue);
 
+  revalidatePath(pathname);
   return NextResponse.json(updatedIssue);
 }
