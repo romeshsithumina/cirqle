@@ -3,6 +3,7 @@
 import ImageDisplay from "@/components/ImageDisplay";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
+import { useIssues } from "@/contexts/IssuesContext";
 import { convertDateFormat } from "@/lib/utils";
 import axios from "axios";
 import { usePathname } from "next/navigation";
@@ -25,6 +26,7 @@ interface IssueClientProps {
 
 const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [selectedTag, setSelectedTag] = useState<string>(issue.status);
+  const { updateIssue } = useIssues();
   const pathname = usePathname();
 
   const handleTagSelect = async (value: string) => {
@@ -32,6 +34,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
     try {
       await axios.post(`/api/issue/${issue.uuid}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
+        updateIssue();
       });
     } catch (error) {
       console.log("Error is: " + error);
