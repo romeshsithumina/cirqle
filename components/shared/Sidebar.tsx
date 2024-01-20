@@ -4,6 +4,7 @@ import { getIssues } from "@/lib/actions/getIssues";
 import { useState, useEffect } from "react";
 import IssueCard from "../IssueCard";
 import Navbar from "./Navbar";
+import { useIssues } from "@/contexts/IssuesContext";
 
 interface Issue {
   uuid: string;
@@ -18,6 +19,7 @@ interface Issue {
 
 const Sidebar = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
+  const { isIssueUpdated } = useIssues();
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -31,7 +33,7 @@ const Sidebar = () => {
       }
     };
     fetchIssues();
-  }, []);
+  }, [isIssueUpdated]);
 
   return (
     <>
