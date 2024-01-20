@@ -3,7 +3,9 @@
 import ImageDisplay from "@/components/ImageDisplay";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
+import { convertDateFormat } from "@/lib/utils";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 interface IssueClientProps {
@@ -23,9 +25,10 @@ interface IssueClientProps {
 
 const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [selectedTag, setSelectedTag] = useState<string>(issue.status);
+  const pathname = usePathname();
 
   const handleTagSelect = async (value: string) => {
-    const updatedIssue = { ...issue, status: value };
+    const updatedIssue = { ...issue, status: value, pathname };
     try {
       await axios.post(`/api/issue/${issue.uuid}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
@@ -53,7 +56,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
             <span className="">{issue.author.name}</span>
             <span className="">·</span>
             <span className="text-slate-600">
-              {issue.createdAt.toISOString()}
+              {convertDateFormat(issue.createdAt.toISOString())}
             </span>
           </div>
           <div className="ml-10 flex gap-4">
