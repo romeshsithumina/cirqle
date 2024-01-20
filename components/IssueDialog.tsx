@@ -10,45 +10,73 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useIssues } from "@/contexts/IssuesContext";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
+
+type FormFields = {
+  title: string;
+  description: string;
+  priority: string;
+  type: string;
+  assignedTo: number;
+  image: string;
+};
 
 const IssueDialog = () => {
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
-  } = useForm();
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    defaultValues: {
+      title: "",
+      description: "",
+      priority: "",
+      type: "",
+      assignedTo: undefined,
+    },
+  });
   const [selectedTag, setSelectedTag] = useState("");
+  const [open, setOpen] = useState(false);
+  const { updateIssue } = useIssues();
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log(data);
     // Handle form submission here
-    axios.post("/api/issues", data).catch((e) => console.log(e));
+    await axios
+      .post("/api/issue", data)
+      .catch((e) => console.log(e))
+      .then(() => {
+        updateIssue();
+        setOpen(false);
+        reset();
+      });
   };
 
-  // Callback function to update the form value when TypeSelect changes
+  // Callback function to update the form value when selection changes
   const handleTypeChange = (value: string) => {
-    setValue("priority", value); // Assuming "type" is the field name in your form
+    setValue("priority", value);
   };
-  const handleUserSelect = (value) => {
+  const handleUserSelect = (value: number) => {
     setValue("assignedTo", value);
   };
-  const handleTagSelect = (value) => {
+  const handleTagSelect = (value: string) => {
     setValue("type", value);
     setSelectedTag(value);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add an Issue</Button>
       </DialogTrigger>
@@ -118,8 +146,12 @@ const IssueDialog = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button className="bg-red-primary text-white" type="submit">
-              Save changes
+            <Button
+              disabled={isSubmitting}
+              className="bg-red-primary text-white"
+              type="submit"
+            >
+              Save Changes
             </Button>
           </DialogFooter>
         </form>
