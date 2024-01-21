@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import IssueCard from "../IssueCard";
 import Navbar from "./Navbar";
 import { useIssues } from "@/contexts/IssuesContext";
+import { useProject } from "@/contexts/ProjectContext";
 
 interface Issue {
   uuid: string;
@@ -20,11 +21,12 @@ interface Issue {
 const Sidebar = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const { isIssueUpdated } = useIssues();
+  const { selectedProject } = useProject();
 
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const res = await getIssues();
+        const res = await getIssues(selectedProject?.id);
         if (res) {
           setIssues(res);
         }
@@ -33,7 +35,7 @@ const Sidebar = () => {
       }
     };
     fetchIssues();
-  }, [isIssueUpdated]);
+  }, [isIssueUpdated, selectedProject]);
 
   return (
     <>
@@ -42,7 +44,7 @@ const Sidebar = () => {
           <Navbar />
         </div>
         <div className="max-h-[calc(100vh-67px)] overflow-y-auto">
-          {issues.map((issue) => (
+          {issues?.map((issue) => (
             <IssueCard
               key={issue.uuid}
               uuid={issue.uuid}
