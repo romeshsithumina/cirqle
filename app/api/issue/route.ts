@@ -18,8 +18,9 @@ export async function POST(request: Request) {
   const nanoid = customAlphabet(alphabet, 20);
 
   const body = await request.json();
+  console.log(body);
 
-  const { title, description, type, priority, assignedTo } = body;
+  const { title, description, type, priority, assignedTo, projectId } = body;
 
   const newIssue = await prisma.issue
     .create({
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
         },
         project: {
           connect: {
-            id: 1,
+            id: projectId,
           },
         },
       },
