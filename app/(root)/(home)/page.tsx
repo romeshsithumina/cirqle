@@ -1,8 +1,16 @@
+"use client";
+
 import ImageDisplay from "@/components/ImageDisplay";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
+import { useProject } from "@/contexts/ProjectContext";
 
 const Page = () => {
+  const { selectedProject } = useProject();
+
+  if (!selectedProject)
+    return <div className="p-10">Please Select a Project first</div>;
+
   return (
     <div className="left-0 top-0 h-screen px-8 py-6">
       <div className="flex flex-col">
