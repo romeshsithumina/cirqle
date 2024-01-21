@@ -20,6 +20,7 @@ import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
+import { useProject } from "@/contexts/ProjectContext";
 
 type FormFields = {
   title: string;
@@ -49,12 +50,13 @@ const IssueDialog = () => {
   const [selectedTag, setSelectedTag] = useState("");
   const [open, setOpen] = useState(false);
   const { updateIssue } = useIssues();
+  const { selectedProject } = useProject();
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log(data);
     // Handle form submission here
     await axios
-      .post("/api/issue", data)
+      .post("/api/issue", { ...data, projectId: selectedProject?.id })
       .catch((e) => console.log(e))
       .then(() => {
         updateIssue();
