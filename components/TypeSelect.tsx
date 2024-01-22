@@ -11,11 +11,14 @@ import { SelectLabel } from "@radix-ui/react-select";
 import { useState } from "react";
 
 interface TypeSelectProps {
+  currentValue?: string;
   onTypeChange: (value: string) => void;
 }
 
-const TypeSelect = ({ onTypeChange }: TypeSelectProps) => {
-  const [value, setValue] = useState("");
+const TypeSelect = ({ currentValue, onTypeChange }: TypeSelectProps) => {
+  const [value, setValue] = useState(
+    currentValue ? capitalizeFirstLetter(currentValue) : undefined
+  );
 
   return (
     <Select
@@ -23,6 +26,7 @@ const TypeSelect = ({ onTypeChange }: TypeSelectProps) => {
         setValue(capitalizeFirstLetter(value));
         onTypeChange(value);
       }}
+      defaultValue={currentValue}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Priority...">Priority: {value}</SelectValue>
