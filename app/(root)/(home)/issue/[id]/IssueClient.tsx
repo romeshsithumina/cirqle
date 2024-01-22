@@ -1,7 +1,7 @@
 "use client";
 
 import ImageDisplay from "@/components/ImageDisplay";
-import IssueEditDialog from "@/components/IssueEditDialog";
+import IssueDialog from "@/components/IssueDialog";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
 import { useIssues } from "@/contexts/IssuesContext";
@@ -52,7 +52,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
 
   return (
     <>
-      <IssueEditDialog
+      <IssueDialog
         open={editDialogOpen}
         issue={issue}
         onClose={setEditDialogOpen}

@@ -8,9 +8,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useIssues } from "@/contexts/IssuesContext";
+import { useProject } from "@/contexts/ProjectContext";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
@@ -20,7 +20,6 @@ import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
-import { useProject } from "@/contexts/ProjectContext";
 
 type FormFields = {
   title: string;
@@ -31,36 +30,57 @@ type FormFields = {
   image: string;
 };
 
-const IssueDialog = () => {
+interface Issue {
+  uuid: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  type: string;
+  createdAt: Date;
+  author: { name: string };
+  project: { title: string };
+  assignedTo: { id: number; name: string };
+}
+
+interface IssueDialogProps {
+  open: boolean;
+  onClose: (value: boolean) => void;
+  issue?: Issue; // Optional issue prop for editing
+}
+
+const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<FormFields>({
     defaultValues: {
-      title: "",
-      description: "",
-      priority: "",
-      type: "",
-      assignedTo: undefined,
+      title: issue?.title || "",
+      description: issue?.description || "",
+      priority: issue?.priority || "",
+      type: issue?.type || "",
+      assignedTo: issue?.assignedTo.id || undefined,
     },
   });
-  const [selectedTag, setSelectedTag] = useState("");
-  const [open, setOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(getValues("type"));
   const { updateIssue } = useIssues();
   const { selectedProject } = useProject();
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log(data);
     // Handle form submission here
+    const apiUrl = issue ? `/api/issue/${issue.uuid}` : "/api/issue";
+
     await axios
-      .post("/api/issue", { ...data, projectId: selectedProject?.id })
+      .post(apiUrl, { ...data, projectId: selectedProject?.id })
       .catch((e) => console.log(e))
       .then(() => {
         updateIssue();
-        setOpen(false);
+        onClose(false);
         reset();
       });
   };
@@ -78,16 +98,15 @@ const IssueDialog = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Add an Issue</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="bg-white sm:max-w-[800px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>Add an Issue</DialogTitle>
+            <DialogTitle>{issue ? "Edit Issue" : "Add Issue"}</DialogTitle>
             <DialogDescription>
-              Enter issue details here. Click save when done.
+              {issue
+                ? "Update issue details here. Click save when done."
+                : "Enter issue details here. Click save when done."}
             </DialogDescription>
           </DialogHeader>
 
@@ -116,7 +135,10 @@ const IssueDialog = () => {
               <ImageUpload />
             </div>
             <div className="col-start-2 row-start-4 w-full">
-              <TypeSelect onTypeChange={handleTypeChange} />
+              <TypeSelect
+                currentValue={getValues("priority")}
+                onTypeChange={handleTypeChange}
+              />
             </div>
             <div className="col-start-1 row-start-3 mt-5 flex items-center justify-center px-5">
               <InputLabel className="w-[80px]">Type</InputLabel>
@@ -144,7 +166,10 @@ const IssueDialog = () => {
               </div>
             </div>
             <div className="col-start-1 row-start-4 w-full">
-              <Combobox onUserSelect={handleUserSelect} />
+              <Combobox
+                currentValue={getValues("assignedTo")}
+                onUserSelect={handleUserSelect}
+              />
             </div>
           </div>
           <DialogFooter>

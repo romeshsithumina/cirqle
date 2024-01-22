@@ -20,7 +20,7 @@ import {
 import { getDevelopers } from "@/lib/actions/getUsers";
 
 interface ComboboxProps {
-  currentValue: number;
+  currentValue?: number;
   onUserSelect: (value: number) => void;
 }
 
@@ -91,6 +91,7 @@ export function Combobox({
                   if (currentValue !== value) {
                     setOpen(false);
                     onUserSelect(user.id);
+                    setValue(currentValue);
                   }
                 }}
               >
