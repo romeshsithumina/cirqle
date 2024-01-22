@@ -19,38 +19,8 @@ import {
 } from "@/components/ui/popover";
 import { getDevelopers } from "@/lib/actions/getUsers";
 
-// const users = [
-//   {
-//     value: "bob",
-//     label: "Bob",
-//   },
-//   {
-//     value: "john",
-//     label: "John",
-//   },
-//   {
-//     value: "alice",
-//     label: "Alice",
-//   },
-//   {
-//     value: "harry",
-//     label: "Harry",
-//   },
-//   {
-//     value: "eva",
-//     label: "Eva",
-//   },
-//   {
-//     value: "diana",
-//     label: "Diana",
-//   },
-//   {
-//     value: "grace",
-//     label: "Grace",
-//   },
-// ];
-
 interface ComboboxProps {
+  currentValue: number;
   onUserSelect: (value: number) => void;
 }
 
@@ -65,16 +35,26 @@ interface User {
   updatedAt: string;
 }
 
-export function Combobox({ onUserSelect }: ComboboxProps) {
+export function Combobox({
+  currentValue: userId,
+  onUserSelect,
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
   const [users, setUsers] = React.useState<User[]>([]);
+  const [value, setValue] = React.useState<string | undefined>();
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const developers = await getDevelopers();
         setUsers(developers);
+
+        const selectedUser = developers.find(
+          (user: User) => user.id === userId
+        );
+        if (selectedUser) {
+          setValue(selectedUser.name);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -98,7 +78,7 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] bg-white p-0">
+      <PopoverContent defaultValue={value} className="w-[300px] bg-white p-0">
         <Command>
           <CommandInput placeholder="Search developers..." className="h-9" />
           <CommandEmpty>No user found.</CommandEmpty>
@@ -108,9 +88,10 @@ export function Combobox({ onUserSelect }: ComboboxProps) {
                 key={user.id}
                 value={user.name}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                  onUserSelect(user.id);
+                  if (currentValue !== value) {
+                    setOpen(false);
+                    onUserSelect(user.id);
+                  }
                 }}
               >
                 {user.name}
