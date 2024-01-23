@@ -36,3 +36,40 @@ export async function POST(request: Request, { params }: { params: IParams }) {
   revalidatePath(pathname);
   return NextResponse.json(updatedIssue);
 }
+
+export async function PATCH(request: Request, { params }: { params: IParams }) {
+  const body = await request.json();
+
+  const { title, description, type, priority, assignedTo, pathname } = body;
+  const { issueId } = params;
+
+  const updatedIssue = await prisma.issue
+    .update({
+      where: {
+        uuid: issueId,
+      },
+      data: {
+        title,
+        description,
+        type,
+        priority,
+        assignedTo: {
+          connect: {
+            id: assignedTo,
+          },
+        },
+      },
+    })
+    .catch(async (e: any) => {
+      console.log("Error is");
+      console.log(e.response.data);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+
+  console.log("Updated issue is ", updatedIssue);
+
+  revalidatePath(pathname);
+  return NextResponse.json(updatedIssue);
+}
