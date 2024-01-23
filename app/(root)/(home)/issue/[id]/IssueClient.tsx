@@ -1,6 +1,7 @@
 "use client";
 
 import ImageDisplay from "@/components/ImageDisplay";
+import { IssueDeleteDialog } from "@/components/IssueDeleteDialog";
 import IssueDialog from "@/components/IssueDialog";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
@@ -29,6 +30,7 @@ interface IssueClientProps {
 const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [selectedTag, setSelectedTag] = useState<string>(issue.status);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { updateIssue } = useIssues();
   const pathname = usePathname();
 
@@ -48,6 +50,10 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
     setEditDialogOpen(true);
   };
 
+  const handleDeleteClick = () => {
+    setDeleteDialogOpen(true);
+  };
+
   if (!issue) return <div>Loading...</div>;
 
   return (
@@ -56,6 +62,11 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
         open={editDialogOpen}
         issue={issue}
         onClose={setEditDialogOpen}
+      />
+      <IssueDeleteDialog
+        open={deleteDialogOpen}
+        id={issue.uuid}
+        onClose={setDeleteDialogOpen}
       />
       <div className="left-0 top-0 h-screen px-8 py-6">
         <div className="flex flex-col">
@@ -100,7 +111,10 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
                 className="cursor-pointer text-slate-500 hover:text-red-primary"
                 onClick={handleEditClick}
               />
-              <MdDelete className="cursor-pointer text-slate-500 hover:text-red-primary" />
+              <MdDelete
+                className="cursor-pointer text-slate-500 hover:text-red-primary"
+                onClick={handleDeleteClick}
+              />
             </div>
           </div>
 
