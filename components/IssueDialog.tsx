@@ -20,6 +20,7 @@ import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
+import { usePathname } from "next/navigation";
 
 type FormFields = {
   title: string;
@@ -69,20 +70,31 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const [selectedTag, setSelectedTag] = useState(getValues("type"));
   const { updateIssue } = useIssues();
   const { selectedProject } = useProject();
+  const pathname = usePathname();
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log(data);
     // Handle form submission here
-    const apiUrl = issue ? `/api/issue/${issue.uuid}` : "/api/issue";
 
-    await axios
-      .post(apiUrl, { ...data, projectId: selectedProject?.id })
-      .catch((e) => console.log(e))
-      .then(() => {
-        updateIssue();
-        onClose(false);
-        reset();
-      });
+    if (issue) {
+      await axios
+        .patch(`/api/issue/${issue.uuid}`, { ...data, pathname })
+        .catch((e) => console.log(e))
+        .then(() => {
+          updateIssue();
+          onClose(false);
+        });
+    } else {
+      await axios
+        .post("/api/issue", { ...data, projectId: selectedProject?.id })
+        .catch((e) => console.log(e))
+        .then(() => {
+          updateIssue();
+          onClose(false);
+          reset();
+          setSelectedTag(getValues("type"));
+        });
+    }
   };
 
   // Callback function to update the form value when selection changes
