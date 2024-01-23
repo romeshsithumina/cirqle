@@ -73,3 +73,25 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
   revalidatePath(pathname);
   return NextResponse.json(updatedIssue);
 }
+
+export async function DELETE({ params }: { params: IParams }) {
+  const { issueId } = params;
+
+  await prisma.issue
+    .delete({
+      where: {
+        uuid: issueId,
+      },
+    })
+    .catch(async (e: any) => {
+      console.log("Error is");
+      console.log(e.response.data);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+
+  return NextResponse.json({
+    message: `Issue ${issueId} was deleted successfully`,
+  });
+}
