@@ -14,13 +14,13 @@ import { useProject } from "@/contexts/ProjectContext";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
-import { usePathname } from "next/navigation";
 
 type FormFields = {
   title: string;
@@ -111,7 +111,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-white sm:max-w-[800px]">
+      <DialogContent className="DialogContent bg-white sm:max-w-[800px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>{issue ? "Edit Issue" : "Add Issue"}</DialogTitle>

@@ -74,7 +74,7 @@ export function ProjectSelect({
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[170px] bg-white p-0">
+        <PopoverContent className="PopoverContent w-[170px] bg-white p-0">
           <Command>
             <CommandInput placeholder="Search projects..." className="h-9" />
             <CommandGroup>

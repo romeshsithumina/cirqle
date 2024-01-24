@@ -43,7 +43,7 @@ export function IssueDeleteDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-white">
+      <AlertDialogContent className="DialogContent bg-white">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>

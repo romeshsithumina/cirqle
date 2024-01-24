@@ -54,7 +54,7 @@ const ProjectDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-white sm:max-w-[500px]">
+      <DialogContent className="DialogContent bg-white sm:max-w-[500px]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Create Project</DialogTitle>
