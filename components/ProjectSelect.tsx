@@ -37,19 +37,22 @@ export function ProjectSelect({
   setOpen,
   onUserSelect,
 }: ProjectSelectProps) {
+  const { selectedProject } = useProject();
   const [value, setValue] = useState("");
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
   const { updateSelectedProject } = useProject();
+  console.log(selectedProject);
 
   useEffect(() => {
     const fetchProjects = async () => {
       const allProjects = await getProjects();
       setProjects(allProjects);
+      if (selectedProject) setValue(selectedProject.name);
     };
     fetchProjects();
-  }, [projectCreated]);
+  }, [projectCreated, selectedProject]);
 
   return (
     <>
@@ -107,7 +110,8 @@ export function ProjectSelect({
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === project.name.toLocaleLowerCase()
+                      value.toLocaleLowerCase() ===
+                        project.name.toLocaleLowerCase()
                         ? "opacity-100"
                         : "opacity-0"
                     )}
