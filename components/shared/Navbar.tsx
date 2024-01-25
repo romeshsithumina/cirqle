@@ -3,10 +3,12 @@ import { PiDotsNineBold } from "react-icons/pi";
 import IssueDialog from "../IssueDialog";
 import { ProjectSelect } from "../ProjectSelect";
 import { Button } from "../ui/button";
+import { useProject } from "@/contexts/ProjectContext";
 
 const Navbar = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [projectSelectOpen, setProjectSelectOpen] = useState(false);
+  const { selectedProject } = useProject();
 
   const handleClick = () => {
     setAddDialogOpen(true);
@@ -31,7 +33,9 @@ const Navbar = () => {
         </div>
         <div className="mr-5">
           <Button
-            className="border border-red-primary text-red-primary"
+            className="border border-red-primary text-red-primary hover:bg-red-primary hover:text-white"
+            disabled={selectedProject === undefined}
+            title="Add Issue"
             onClick={handleClick}
           >
             Add Issue
