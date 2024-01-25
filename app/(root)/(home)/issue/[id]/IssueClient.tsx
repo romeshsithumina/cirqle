@@ -24,6 +24,7 @@ interface IssueClientProps {
     author: { name: string };
     project: { title: string };
     assignedTo: { id: number; name: string };
+    attachments: [{ id: number; url: string }];
   };
 }
 
@@ -36,8 +37,9 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
 
   const handleTagSelect = async (value: string) => {
     const updatedIssue = { ...issue, status: value, pathname };
+    const issueId = issue.uuid;
     try {
-      await axios.post(`/api/issue/${issue.uuid}`, updatedIssue).then((res) => {
+      await axios.post(`/api/issue/${issueId}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
         updateIssue();
       });
@@ -127,7 +129,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
           <div className="mt-7">
             <div className="font-medium">Images</div>
             <div className="mt-5 text-sm text-slate-600">
-              <ImageDisplay value="/assets/test.png" />
+              <ImageDisplay value={issue.attachments[0]?.url} />
             </div>
           </div>
           <div className="mt-7">

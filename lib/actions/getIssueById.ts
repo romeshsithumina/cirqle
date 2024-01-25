@@ -10,7 +10,7 @@ export async function getIssueById(params: IParams) {
   try {
     const { id } = params;
 
-    const issue = prisma.issue.findUnique({
+    const issue = await prisma.issue.findUnique({
       where: {
         uuid: id,
       },
@@ -18,10 +18,21 @@ export async function getIssueById(params: IParams) {
         author: true,
         assignedTo: true,
         project: true,
+        attachments: {
+          where: {
+            mimetype: "image",
+          },
+        },
       },
     });
 
-    return issue;
+    const attachments = await prisma.attachment.findMany({
+      where: {
+        issueId: issue.id,
+      },
+    });
+
+    return { ...issue, attachments };
   } catch (error) {
     console.log(error);
     throw error;

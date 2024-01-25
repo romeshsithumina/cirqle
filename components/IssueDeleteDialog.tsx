@@ -30,8 +30,9 @@ export function IssueDeleteDialog({
 
   const handleDeleteButtonClick = async () => {
     setIsDeleting(true);
+    const issueId = id;
     await axios
-      .delete(`/api/issue/${id}`)
+      .delete(`/api/issue/${issueId}`)
       .then(() => {
         updateIssue();
         setIsDeleting(false);
@@ -52,7 +53,7 @@ export function IssueDeleteDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDeleteButtonClick}
             disabled={isDeleting}

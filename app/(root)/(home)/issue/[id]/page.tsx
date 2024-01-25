@@ -1,10 +1,10 @@
 "use client";
 
-import { getIssueById } from "@/lib/actions/getIssueById";
-import IssueClient from "./IssueClient";
-import { useEffect, useState } from "react";
 import { useIssues } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
+import { getIssueById } from "@/lib/actions/getIssueById";
+import { useEffect, useState } from "react";
+import IssueClient from "./IssueClient";
 
 interface IParams {
   id?: string;

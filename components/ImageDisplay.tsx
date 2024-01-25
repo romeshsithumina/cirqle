@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { TbPhoto } from "react-icons/tb";
+// @ts-ignore
 import { RViewer, RViewerTrigger } from "react-viewerjs";
 
 interface ImageDisplayProps {
@@ -10,7 +11,7 @@ interface ImageDisplayProps {
 }
 
 const ImageDisplay: React.FC<ImageDisplayProps> = ({ value }) => {
-  const sourceUrl = "/assets/test.png";
+  const sourceUrl = value;
   const options = {
     toolbar: {
       prev: false,
@@ -48,8 +49,8 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ value }) => {
                 <Image
                   fill
                   style={{ objectFit: "cover" }}
-                  src="/assets/test.png"
-                  alt="test"
+                  src={value}
+                  alt="issue-image"
                 />
               </RViewerTrigger>
             </RViewer>

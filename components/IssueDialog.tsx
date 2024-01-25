@@ -28,7 +28,7 @@ type FormFields = {
   priority: string;
   type: string;
   assignedTo: number;
-  image: string;
+  imageSrc: string;
 };
 
 interface Issue {
@@ -39,6 +39,7 @@ interface Issue {
   priority: string;
   type: string;
   createdAt: Date;
+  attachments?: [{ id: number; url: string }];
   author: { name: string };
   project: { title: string };
   assignedTo: { id: number; name: string };
@@ -65,6 +66,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
       priority: issue?.priority || "",
       type: issue?.type || "",
       assignedTo: issue?.assignedTo.id || undefined,
+      imageSrc: issue?.attachments?.[0]?.url || "",
     },
   });
   const [selectedTag, setSelectedTag] = useState(getValues("type"));
@@ -73,12 +75,14 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const pathname = usePathname();
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
-    console.log(data);
+    console.log("submitted data are\n", data);
     // Handle form submission here
 
     if (issue) {
+      // issue update
+      const issueId = issue.uuid;
       await axios
-        .patch(`/api/issue/${issue.uuid}`, { ...data, pathname })
+        .patch(`/api/issue/${issueId}`, { ...data, pathname })
         .catch((e) => console.log(e))
         .then(() => {
           updateIssue();
@@ -86,6 +90,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
         });
     } else {
       await axios
+        // issue creation
         .post("/api/issue", { ...data, projectId: selectedProject?.id })
         .catch((e) => console.log(e))
         .then(() => {
@@ -107,6 +112,10 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const handleTagSelect = (value: string) => {
     setValue("type", value);
     setSelectedTag(value);
+  };
+
+  const handleImageChange = (value: string) => {
+    setValue("imageSrc", value);
   };
 
   return (
@@ -144,7 +153,10 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
               />
             </div>
             <div className="col-start-2 row-span-3 row-start-1">
-              <ImageUpload />
+              <ImageUpload
+                value={getValues("imageSrc")}
+                onChange={handleImageChange}
+              />
             </div>
             <div className="col-start-2 row-start-4 w-full">
               <TypeSelect

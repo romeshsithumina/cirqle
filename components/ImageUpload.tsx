@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 
 declare global {
-  var cloudinary: any;
+  let cloudinary: any;
 }
 
 interface ImageUploadProps {
@@ -25,7 +25,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   return (
     <CldUploadWidget
       onUpload={handleUpload}
-      uploadPreset="project-roomie-upload"
+      uploadPreset="njtgpds4"
       options={{
         maxFiles: 1,
       }}
@@ -54,7 +54,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
             <TbPhotoPlus size={50} />
             <div className="text-lg font-semibold">Click to upload</div>
             {value && (
-              <div className="abosolute inset-0 h-full w-full">
+              <div className="absolute inset-0 h-full w-full">
                 <Image
                   alt="Upload"
                   fill
