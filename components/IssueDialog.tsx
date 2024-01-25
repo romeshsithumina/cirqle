@@ -14,7 +14,7 @@ import { useProject } from "@/contexts/ProjectContext";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Combobox } from "./Combobox";
@@ -73,6 +73,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const { updateIssue } = useIssues();
   const { selectedProject } = useProject();
   const pathname = usePathname();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log("submitted data are\n", data);
@@ -89,16 +90,22 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
           onClose(false);
         });
     } else {
-      await axios
+      const newIssue = await axios
         // issue creation
         .post("/api/issue", { ...data, projectId: selectedProject?.id })
         .catch((e) => console.log(e))
-        .then(() => {
+        .then((res) => {
           updateIssue();
           onClose(false);
           reset();
           setSelectedTag(getValues("type"));
+
+          if (res && res.data) {
+            router.push(`/issue/${res.data.uuid}`);
+          }
         });
+
+      console.log("Created new issue: ", newIssue);
     }
   };
 
