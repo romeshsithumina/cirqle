@@ -20,6 +20,7 @@ import { getProjects } from "@/lib/actions/getProjects";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import ProjectDialog from "./ProjectDialog";
+import { useRouter } from "next/navigation";
 
 interface ProjectSelectProps {
   open: boolean;
@@ -43,7 +44,9 @@ export function ProjectSelect({
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
   const { updateSelectedProject } = useProject();
-  console.log(selectedProject);
+  const router = useRouter();
+
+  console.log("selected project: ", selectedProject);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -103,6 +106,10 @@ export function ProjectSelect({
                     setOpen(false);
                     onUserSelect(project.id);
                     updateSelectedProject(project);
+
+                    if (currentValue !== value.toLocaleLowerCase()) {
+                      router.push("/");
+                    }
                   }}
                   className="hover:text-red-primary"
                 >
