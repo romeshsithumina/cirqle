@@ -74,7 +74,11 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
   return NextResponse.json(updatedIssue);
 }
 
-export async function DELETE({ params }: { params: IParams }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: IParams }
+) {
+  console.log("params are: ", params);
   const { issueId } = params;
 
   await prisma.issue
