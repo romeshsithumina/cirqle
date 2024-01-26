@@ -7,14 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ProjectSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@mui/material";
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 
-type FormFields = {
-  title: string;
-  description: string;
-};
+type FormFields = z.infer<typeof ProjectSchema>;
 
 interface ProjectDialogProps {
   open: boolean;
@@ -33,8 +33,9 @@ const ProjectDialog = ({
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormFields>({
+    resolver: zodResolver(ProjectSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -66,11 +67,15 @@ const ProjectDialog = ({
           <div className="py-4">
             <div className="mb-5 w-full items-center gap-4">
               <TextField
-                {...register("title", { required: true })}
-                id="outlined-basic"
+                {...register("title")}
+                id={
+                  errors.title ? "outlined-error-helper-text" : "outlined-basic"
+                }
                 label="Title"
                 variant="outlined"
                 className="w-full"
+                helperText={errors.title?.message}
+                error={!!errors.title}
               />
             </div>
             <div className="items-center gap-4">
