@@ -78,8 +78,33 @@ export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
-  console.log("params are: ", params);
   const { issueId } = params;
+
+  const { id } = await prisma.issue
+    .findUnique({
+      where: {
+        uuid: issueId,
+      },
+    })
+    .catch(async (e: any) => {
+      console.log(e.response.data);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+
+  await prisma.attachment
+    .deleteMany({
+      where: {
+        issueId: id,
+      },
+    })
+    .catch(async (e: any) => {
+      console.log(e.response.data);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
 
   await prisma.issue
     .delete({
