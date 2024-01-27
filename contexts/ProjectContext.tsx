@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 interface Project {
   id: number;
@@ -21,8 +27,18 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
 
+  useEffect(() => {
+    // Retrieve stored project from local storage
+    const storedProject = localStorage.getItem("selectedProject");
+    if (storedProject) {
+      setSelectedProject(JSON.parse(storedProject));
+    }
+  }, []);
+
   const updateSelectedProject = (project: Project) => {
+    // Update state and store in local storage
     setSelectedProject(project);
+    localStorage.setItem("selectedProject", JSON.stringify(project));
   };
 
   return (
