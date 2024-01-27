@@ -5,15 +5,12 @@ import Image from "next/image";
 import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 
-declare global {
-  let cloudinary: any;
-}
-
 interface ImageUploadProps {
   onChange: (value: string) => void;
-  value: string;
+  value?: string;
 }
 
+// eslint-disable-next-line no-undef
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   const handleUpload = useCallback(
     (result: any) => {

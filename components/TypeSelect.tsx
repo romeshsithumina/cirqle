@@ -11,8 +11,8 @@ import { SelectLabel } from "@radix-ui/react-select";
 import { useState } from "react";
 
 interface TypeSelectProps {
-  currentValue?: string;
-  onTypeChange: (value: string) => void;
+  currentValue?: "low" | "medium" | "high";
+  onTypeChange: (value: "low" | "medium" | "high") => void;
 }
 
 const TypeSelect = ({ currentValue, onTypeChange }: TypeSelectProps) => {
@@ -22,7 +22,7 @@ const TypeSelect = ({ currentValue, onTypeChange }: TypeSelectProps) => {
 
   return (
     <Select
-      onValueChange={(value) => {
+      onValueChange={(value: "low" | "medium" | "high") => {
         setValue(capitalizeFirstLetter(value));
         onTypeChange(value);
       }}
@@ -33,7 +33,7 @@ const TypeSelect = ({ currentValue, onTypeChange }: TypeSelectProps) => {
       </SelectTrigger>
       <SelectContent className="bg-white">
         <SelectGroup>
-          <SelectLabel>Priority</SelectLabel>
+          <SelectLabel className="border-b">Priority</SelectLabel>
           <SelectItem value="low">Low</SelectItem>
           <SelectItem value="medium">Medium</SelectItem>
           <SelectItem value="high">High</SelectItem>

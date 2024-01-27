@@ -11,33 +11,29 @@ import {
 } from "@/components/ui/dialog";
 import { useIssues } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
+import { IssueSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { TextField } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 import { Combobox } from "./Combobox";
 import ImageUpload from "./ImageUpload";
 import Tag from "./Tag";
 import TypeSelect from "./TypeSelect";
 
-type FormFields = {
-  title: string;
-  description: string;
-  priority: string;
-  type: string;
-  assignedTo: number;
-  imageSrc: string;
-};
+type FormFields = z.infer<typeof IssueSchema>;
 
 interface Issue {
   uuid: string;
   title: string;
   description: string;
   status: string;
-  priority: string;
-  type: string;
+  priority: "low" | "medium" | "high";
+  type: "bug" | "feature" | "improvement";
   createdAt: Date;
   attachments?: [{ id: number; url: string }];
   author: { name: string };
@@ -58,13 +54,15 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
     setValue,
     getValues,
     reset,
-    formState: { isSubmitting },
+    clearErrors,
+    formState: { isSubmitting, errors },
   } = useForm<FormFields>({
+    resolver: zodResolver(IssueSchema),
     defaultValues: {
       title: issue?.title || "",
       description: issue?.description || "",
-      priority: issue?.priority || "",
-      type: issue?.type || "",
+      priority: issue?.priority || undefined,
+      type: issue?.type || undefined,
       assignedTo: issue?.assignedTo.id || undefined,
       imageSrc: issue?.attachments?.[0]?.url || "",
     },
@@ -77,7 +75,6 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log("submitted data are\n", data);
-    // Handle form submission here
 
     if (issue) {
       // issue update
@@ -90,8 +87,8 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
           onClose(false);
         });
     } else {
+      // issue creation
       const newIssue = await axios
-        // issue creation
         .post("/api/issue", { ...data, projectId: selectedProject?.id })
         .catch((e) => console.log(e))
         .then((res) => {
@@ -110,15 +107,20 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   };
 
   // Callback function to update the form value when selection changes
-  const handleTypeChange = (value: string) => {
+  const handleTypeChange = (value: Issue["priority"]) => {
     setValue("priority", value);
+    clearErrors("priority");
   };
+
   const handleUserSelect = (value: number) => {
     setValue("assignedTo", value);
+    clearErrors("assignedTo");
   };
-  const handleTagSelect = (value: string) => {
+
+  const handleTagSelect = (value: Issue["type"]) => {
     setValue("type", value);
     setSelectedTag(value);
+    clearErrors("type");
   };
 
   const handleImageChange = (value: string) => {
@@ -141,22 +143,66 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
           <div className="grid grid-cols-2 gap-4 py-4">
             <div className="w-full grid-cols-1 items-center gap-4">
               <TextField
-                {...register("title", { required: true })}
-                id="outlined-basic"
+                {...register("title")}
+                id={
+                  errors.title ? "outlined-error-helper-text" : "outlined-basic"
+                }
                 label="Title"
                 variant="outlined"
                 className="w-full"
+                helperText={errors.title?.message}
+                error={!!errors.title}
+                sx={
+                  errors.title
+                    ? {
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "#ff8484",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#f53162",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#f53162",
+                          },
+                        },
+                      }
+                    : undefined
+                }
               />
             </div>
             <div className="col-start-1 grid-cols-1 items-center gap-4">
               <TextField
                 {...register("description")}
-                id="outlined-basic"
+                id={
+                  errors.description
+                    ? "outlined-error-helper-text"
+                    : "outlined-basic"
+                }
                 label="Description"
                 variant="outlined"
                 className="w-full"
                 multiline
                 rows={4}
+                helperText={errors.description?.message}
+                error={!!errors.description}
+                sx={
+                  errors.description
+                    ? {
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "#ff8484",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#f53162",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#f53162",
+                          },
+                        },
+                      }
+                    : undefined
+                }
               />
             </div>
             <div className="col-start-2 row-span-3 row-start-1">
@@ -170,37 +216,54 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
                 currentValue={getValues("priority")}
                 onTypeChange={handleTypeChange}
               />
+              {errors.priority && (
+                <span className="pl-3 text-xs text-red-primary">
+                  {errors.priority?.message}
+                </span>
+              )}
             </div>
-            <div className="col-start-1 row-start-3 mt-5 flex items-center justify-center px-5">
-              <InputLabel className="w-[80px]">Type</InputLabel>
-              <div className="flex w-full gap-4">
-                <div className="flex w-full  justify-around">
-                  <Tag
-                    name="bug"
-                    selected={selectedTag}
-                    onTagSelect={handleTagSelect}
-                    clickable
-                  />
-                  <Tag
-                    name="feature"
-                    selected={selectedTag}
-                    onTagSelect={handleTagSelect}
-                    clickable
-                  />
-                  <Tag
-                    name="improvement"
-                    selected={selectedTag}
-                    onTagSelect={handleTagSelect}
-                    clickable
-                  />
+            <div className="">
+              <div className="col-start-1 row-start-3 mt-5 flex items-center justify-center rounded-md px-5 pb-1">
+                <InputLabel className="w-[80px]">Type</InputLabel>
+                <div className="flex w-full gap-4">
+                  <div className="flex w-full  justify-around">
+                    <Tag
+                      name="bug"
+                      selected={selectedTag}
+                      onTagSelect={handleTagSelect}
+                      clickable
+                    />
+                    <Tag
+                      name="feature"
+                      selected={selectedTag}
+                      onTagSelect={handleTagSelect}
+                      clickable
+                    />
+                    <Tag
+                      name="improvement"
+                      selected={selectedTag}
+                      onTagSelect={handleTagSelect}
+                      clickable
+                    />
+                  </div>
                 </div>
               </div>
+              {errors.type && (
+                <span className="pl-6 text-xs text-red-primary">
+                  {errors.type?.message}
+                </span>
+              )}
             </div>
             <div className="col-start-1 row-start-4 w-full">
               <Combobox
                 currentValue={getValues("assignedTo")}
                 onUserSelect={handleUserSelect}
               />
+              {errors.assignedTo && (
+                <span className="pl-4 text-xs text-red-primary">
+                  {errors.assignedTo?.message}
+                </span>
+              )}
             </div>
           </div>
           <DialogFooter>
