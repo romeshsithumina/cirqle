@@ -26,15 +26,16 @@ export async function getIssueById(params: IParams) {
       },
     });
 
-    const attachments = await prisma.attachment.findMany({
-      where: {
-        issueId: issue.id,
-      },
-    });
+    if (issue) {
+      const attachments = await prisma.attachment.findMany({
+        where: {
+          issueId: issue.id,
+        },
+      });
 
-    return { ...issue, attachments };
+      return { ...issue, attachments };
+    }
   } catch (error) {
     console.log(error);
-    throw error;
   }
 }
