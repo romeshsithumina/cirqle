@@ -32,7 +32,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [selectedTag, setSelectedTag] = useState<string>(issue.status);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const { updateIssue } = useIssues();
+  const { notifyUpdate } = useIssues();
   const pathname = usePathname();
 
   const handleTagSelect = async (value: string) => {
@@ -41,7 +41,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
     try {
       await axios.post(`/api/issue/${issueId}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
-        updateIssue();
+        notifyUpdate();
       });
     } catch (error) {
       console.log("Error is: " + error);

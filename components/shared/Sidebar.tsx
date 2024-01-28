@@ -1,11 +1,11 @@
 "use client";
 
-import { getIssues } from "@/lib/actions/getIssues";
-import { useState, useEffect } from "react";
-import IssueCard from "../IssueCard";
-import Navbar from "./Navbar";
 import { useIssues } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
+import { getIssues } from "@/lib/actions/getIssues";
+import { useEffect, useState } from "react";
+import IssueCard from "../IssueCard";
+import Navbar from "./Navbar";
 
 interface Issue {
   uuid: string;
@@ -20,8 +20,8 @@ interface Issue {
 
 const Sidebar = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
-  const { isIssueUpdated } = useIssues();
   const { selectedProject } = useProject();
+  const { registerUpdateCallback } = useIssues(); // Access context function
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -34,8 +34,18 @@ const Sidebar = () => {
         console.log(error);
       }
     };
-    fetchIssues();
-  }, [isIssueUpdated, selectedProject]);
+
+    const handleIssueUpdate = () => {
+      fetchIssues(); // Refetch on update
+    };
+
+    fetchIssues(); // Initial fetch
+    registerUpdateCallback(handleIssueUpdate); // Register for updates
+
+    return () => {
+      registerUpdateCallback(null); // Unregister on unmount
+    };
+  }, [registerUpdateCallback, selectedProject]);
 
   return (
     <>

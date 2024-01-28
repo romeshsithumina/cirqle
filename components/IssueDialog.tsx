@@ -68,7 +68,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
     },
   });
   const [selectedTag, setSelectedTag] = useState(getValues("type"));
-  const { updateIssue } = useIssues();
+  const { notifyUpdate } = useIssues();
   const { selectedProject } = useProject();
   const pathname = usePathname();
   const router = useRouter();
@@ -83,7 +83,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
         .patch(`/api/issue/${issueId}`, { ...data, pathname })
         .catch((e) => console.log(e))
         .then(() => {
-          updateIssue();
+          notifyUpdate();
           onClose(false);
         });
     } else {
@@ -92,7 +92,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
         .post("/api/issue", { ...data, projectId: selectedProject?.id })
         .catch((e) => console.log(e))
         .then((res) => {
-          updateIssue();
+          notifyUpdate();
           onClose(false);
           reset();
           setSelectedTag(getValues("type"));

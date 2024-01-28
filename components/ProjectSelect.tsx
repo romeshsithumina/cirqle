@@ -21,6 +21,7 @@ import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import ProjectDialog from "./ProjectDialog";
 import { useRouter } from "next/navigation";
+import { useIssues } from "@/contexts/IssuesContext";
 
 interface ProjectSelectProps {
   open: boolean;
@@ -44,6 +45,7 @@ export function ProjectSelect({
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
   const { updateSelectedProject } = useProject();
+  const { notifyUpdate } = useIssues();
   const router = useRouter();
 
   console.log("selected project: ", selectedProject);
@@ -106,6 +108,7 @@ export function ProjectSelect({
                     setOpen(false);
                     onUserSelect(project.id);
                     updateSelectedProject(project);
+                    notifyUpdate();
 
                     if (currentValue !== value.toLocaleLowerCase()) {
                       router.push("/");

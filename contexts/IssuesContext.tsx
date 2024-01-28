@@ -1,10 +1,18 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 
+// IssuesContext.js
 interface IssuesContextProps {
   isIssueUpdated: boolean;
-  updateIssue: () => void;
+  registerUpdateCallback: (callback: (() => void) | null) => void;
+  notifyUpdate: () => void;
 }
 
 const IssuesContext = createContext<IssuesContextProps | undefined>(undefined);
@@ -12,14 +20,28 @@ const IssuesContext = createContext<IssuesContextProps | undefined>(undefined);
 export const IssuesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isIssueUpdated, setIssueUpdated] = useState(false);
+  const [isIssueUpdated, setIssueUpdated] = useState(true);
+  const updateCallbacks = useRef<(() => void)[]>([]);
 
-  const updateIssue = () => {
-    setIssueUpdated(!isIssueUpdated);
+  const registerUpdateCallback = (callback: (() => void) | null) => {
+    if (callback) {
+      updateCallbacks.current.push(callback);
+    } else {
+      updateCallbacks.current = updateCallbacks.current.filter(
+        (cb) => cb !== null
+      );
+    }
+  };
+
+  const notifyUpdate = () => {
+    setIssueUpdated(true);
+    updateCallbacks.current.forEach((callback: any) => callback());
   };
 
   return (
-    <IssuesContext.Provider value={{ isIssueUpdated, updateIssue }}>
+    <IssuesContext.Provider
+      value={{ isIssueUpdated, registerUpdateCallback, notifyUpdate }}
+    >
       {children}
     </IssuesContext.Provider>
   );

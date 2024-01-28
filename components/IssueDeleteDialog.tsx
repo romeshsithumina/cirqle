@@ -25,7 +25,7 @@ export function IssueDeleteDialog({
   onClose,
 }: IssueDeleteDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const { updateIssue } = useIssues();
+  const { notifyUpdate } = useIssues();
   const router = useRouter();
 
   const handleDeleteButtonClick = async () => {
@@ -33,11 +33,12 @@ export function IssueDeleteDialog({
     const issueId = id;
     await axios
       .delete(`/api/issue/${issueId}`)
-      .then(() => {
-        updateIssue();
+      .then(async () => {
+        console.log("issue deleted");
         setIsDeleting(false);
         onClose(false);
         router.push("/");
+        notifyUpdate();
       })
       .catch((e) => console.log(e));
   };
