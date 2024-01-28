@@ -6,6 +6,7 @@ interface TagProps {
   name: string;
   clickable?: boolean;
   selected?: string;
+  disabled?: boolean;
   onTagSelect?: (value: string) => void;
 }
 
@@ -17,7 +18,13 @@ type SelectedStyles = {
   [key: string]: string;
 };
 
-const Tag = ({ name, clickable, selected, onTagSelect }: TagProps) => {
+const Tag = ({
+  name,
+  clickable,
+  selected,
+  disabled,
+  onTagSelect,
+}: TagProps) => {
   const tagStyles: TagStyles = {
     bug: "border-none bg-red-light text-red-strong",
     improvement: "border-none bg-green-light text-green-strong",
@@ -48,8 +55,9 @@ const Tag = ({ name, clickable, selected, onTagSelect }: TagProps) => {
     const customStyle = clickable ? "cursor-pointer" : "";
     const tagStyle = tagStyles[name.toLowerCase()] || "";
     const selectedStyle = selected === name ? selectedStyles[name] || "" : "";
+    const disabledStyle = disabled ? "opacity-50 pointer-events-none" : "";
 
-    return `${baseStyle} ${customStyle} ${tagStyle} ${selectedStyle}`;
+    return `${baseStyle} ${customStyle} ${tagStyle} ${selectedStyle} ${disabledStyle}`;
   };
 
   const displayText =

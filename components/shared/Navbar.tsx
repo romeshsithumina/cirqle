@@ -14,6 +14,8 @@ const Navbar = () => {
     setAddDialogOpen(true);
   };
 
+  console.log("Navbar rendered");
+
   return (
     <>
       <IssueDialog open={addDialogOpen} onClose={setAddDialogOpen} />

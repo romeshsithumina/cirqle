@@ -18,8 +18,8 @@ interface IssueClientProps {
     title: string;
     description: string;
     status: string;
-    priority: string;
-    type: string;
+    priority: "low" | "medium" | "high";
+    type: "bug" | "feature" | "improvement";
     createdAt: Date;
     author: { name: string };
     project: { title: string };
@@ -32,15 +32,18 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [selectedTag, setSelectedTag] = useState<string>(issue.status);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tagDisabled, setTagDisabled] = useState(false);
   const { notifyUpdate } = useIssues();
   const pathname = usePathname();
 
   const handleTagSelect = async (value: string) => {
+    setTagDisabled(true);
     const updatedIssue = { ...issue, status: value, pathname };
     const issueId = issue.uuid;
     try {
       await axios.post(`/api/issue/${issueId}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
+        setTagDisabled(false);
         notifyUpdate();
       });
     } catch (error) {
@@ -94,18 +97,21 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
                 selected={selectedTag}
                 onTagSelect={handleTagSelect}
                 clickable
+                disabled={tagDisabled}
               />
               <Tag
                 name="wip"
                 selected={selectedTag}
                 onTagSelect={handleTagSelect}
                 clickable
+                disabled={tagDisabled}
               />
               <Tag
                 name="done"
                 selected={selectedTag}
                 onTagSelect={handleTagSelect}
                 clickable
+                disabled={tagDisabled}
               />
             </div>
             <div className="ml-auto flex gap-4">

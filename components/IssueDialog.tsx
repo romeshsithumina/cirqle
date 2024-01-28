@@ -117,9 +117,10 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
     clearErrors("assignedTo");
   };
 
-  const handleTagSelect = (value: Issue["type"]) => {
-    setValue("type", value);
-    setSelectedTag(value);
+  const handleTagSelect = (value: string) => {
+    const issueType = value as "bug" | "feature" | "improvement"; // mitigate string not assignable error
+    setValue("type", issueType);
+    setSelectedTag(issueType);
     clearErrors("type");
   };
 

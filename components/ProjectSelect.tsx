@@ -47,7 +47,7 @@ export function ProjectSelect({
   const { notifyUpdate } = useIssues();
   const router = useRouter();
 
-  console.log("selected project: ", selectedProject);
+  console.log("ProjectSelect rendered");
 
   useEffect(() => {
     const fetchProjects = async () => {

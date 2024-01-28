@@ -34,9 +34,7 @@ const Page = ({ params }: { params: IParams }) => {
     const handleIssueUpdate = () => {
       fetchIssue(); // Refetch when notified
     };
-
     registerUpdateCallback(handleIssueUpdate); // Register for updates
-
     return () => {
       registerUpdateCallback(null); // Unregister the callback
     };
