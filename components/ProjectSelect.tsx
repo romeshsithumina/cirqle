@@ -39,12 +39,11 @@ export function ProjectSelect({
   setOpen,
   onUserSelect,
 }: ProjectSelectProps) {
-  const { selectedProject } = useProject();
+  const { selectedProject, updateSelectedProject } = useProject();
   const [value, setValue] = useState("");
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
-  const { updateSelectedProject } = useProject();
   const { notifyUpdate } = useIssues();
   const router = useRouter();
 

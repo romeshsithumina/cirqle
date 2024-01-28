@@ -1,6 +1,6 @@
 "use client";
 
-import { useIssues } from "@/contexts/IssuesContext"; // Import the updated context
+import { useIssues } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { getIssueById } from "@/lib/actions/getIssueById";
 import { useEffect, useMemo, useState } from "react";
@@ -12,16 +12,18 @@ interface IParams {
 
 const Page = ({ params }: { params: IParams }) => {
   const [issue, setIssue] = useState();
-  const { updateSelectedProject } = useProject();
+  const { selectedProject, updateSelectedProject } = useProject();
   const { registerUpdateCallback } = useIssues(); // Access context functions
 
   const fetchIssue = useMemo(() => {
     return async () => {
       const res = await getIssueById(params);
-      console.log("getby id response is \n", res);
       if (res) {
         setIssue(res);
-        updateSelectedProject(res.project);
+
+        if (selectedProject?.id !== res.project.id) {
+          updateSelectedProject(res.project);
+        }
       }
     };
   }, []);
