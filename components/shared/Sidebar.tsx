@@ -21,31 +21,30 @@ interface Issue {
 const Sidebar = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const { selectedProject } = useProject();
-  const { registerUpdateCallback } = useIssues(); // Access context function
+  const { registerUpdateCallback } = useIssues();
 
   useEffect(() => {
     const fetchIssues = async () => {
-      try {
-        const res = await getIssues(selectedProject?.id);
-        if (res) {
-          setIssues(res);
-        }
-      } catch (error) {
-        console.log(error);
+      const res = await getIssues(selectedProject?.id);
+      if (res) {
+        setIssues(res);
       }
     };
+
+    fetchIssues(); // Initial fetch
 
     const handleIssueUpdate = () => {
       fetchIssues(); // Refetch on update
     };
 
-    fetchIssues(); // Initial fetch
     registerUpdateCallback(handleIssueUpdate); // Register for updates
 
     return () => {
       registerUpdateCallback(null); // Unregister on unmount
     };
-  }, [registerUpdateCallback, selectedProject]);
+  }, [selectedProject, registerUpdateCallback]);
+
+  console.log("Sidebar rendered");
 
   return (
     <>
@@ -69,4 +68,5 @@ const Sidebar = () => {
     </>
   );
 };
+
 export default Sidebar;

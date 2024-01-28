@@ -25,16 +25,14 @@ export const IssuesProvider: React.FC<{ children: ReactNode }> = ({
 
   const registerUpdateCallback = (callback: (() => void) | null) => {
     if (callback) {
-      updateCallbacks.current.push(callback);
+      updateCallbacks.current = [...updateCallbacks.current, callback];
     } else {
-      updateCallbacks.current = updateCallbacks.current.filter(
-        (cb) => cb !== null
-      );
+      updateCallbacks.current = updateCallbacks.current.filter(Boolean);
     }
   };
 
   const notifyUpdate = () => {
-    setIssueUpdated(true);
+    setIssueUpdated((prev) => !prev); // Toggle isIssueUpdated
     updateCallbacks.current.forEach((callback: any) => callback());
   };
 
