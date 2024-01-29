@@ -1,54 +1,57 @@
 "use client";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-import React, {
-  ReactNode,
-  createContext,
-  useContext,
-  useRef,
-  useState,
-} from "react";
-
-// IssuesContext.js
-interface IssuesContextProps {
-  isIssueUpdated: boolean;
-  registerUpdateCallback: (callback: (() => void) | null) => void;
-  notifyUpdate: () => void;
+interface Issue {
+  uuid: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: "low" | "medium" | "high";
+  type: "bug" | "feature" | "improvement";
+  createdAt: Date;
+  author: { name: string };
+  project: { title: string };
+  assignedTo: { id: number; name: string };
+  attachments: [{ id: number; url: string }];
 }
 
-const IssuesContext = createContext<IssuesContextProps | undefined>(undefined);
+interface IssueContextProps {
+  issues: Issue[];
+  setIssues: React.Dispatch<React.SetStateAction<Issue[]>>;
+  issuesVersion: number;
+  incrementIssuesVersion: () => void;
+}
 
-export const IssuesProvider: React.FC<{ children: ReactNode }> = ({
+const IssueContext = createContext<IssueContextProps | undefined>(undefined);
+
+export const IssueProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isIssueUpdated, setIssueUpdated] = useState(true);
-  const updateCallbacks = useRef<(() => void)[]>([]);
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const [issuesVersion, setIssuesVersion] = useState(0);
 
-  const registerUpdateCallback = (callback: (() => void) | null) => {
-    if (callback) {
-      updateCallbacks.current = [...updateCallbacks.current, callback];
-    } else {
-      updateCallbacks.current = updateCallbacks.current.filter(Boolean);
-    }
-  };
-
-  const notifyUpdate = () => {
-    setIssueUpdated((prev) => !prev); // Toggle isIssueUpdated
-    updateCallbacks.current.forEach((callback: any) => callback());
+  const incrementIssuesVersion = () => {
+    setIssuesVersion((prevVersion) => prevVersion + 1);
   };
 
   return (
-    <IssuesContext.Provider
-      value={{ isIssueUpdated, registerUpdateCallback, notifyUpdate }}
+    <IssueContext.Provider
+      value={{
+        issues,
+        setIssues,
+        issuesVersion,
+        incrementIssuesVersion,
+      }}
     >
       {children}
-    </IssuesContext.Provider>
+    </IssueContext.Provider>
   );
 };
 
-export const useIssues = () => {
-  const context = useContext(IssuesContext);
+export const useIssueContext = () => {
+  const context = useContext(IssueContext);
   if (!context) {
-    throw new Error("useIssues must be used within an IssuesProvider");
+    throw new Error("useIssueContext must be used within an IssueProvider");
   }
   return context;
 };

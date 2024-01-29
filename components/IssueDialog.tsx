@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useIssues } from "@/contexts/IssuesContext";
+import { useIssueContext } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { IssueSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -68,7 +68,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
     },
   });
   const [selectedTag, setSelectedTag] = useState(getValues("type"));
-  const { notifyUpdate } = useIssues();
+  const { incrementIssuesVersion } = useIssueContext();
   const { selectedProject } = useProject();
   const pathname = usePathname();
   const router = useRouter();
@@ -83,7 +83,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
         .patch(`/api/issue/${issueId}`, { ...data, pathname })
         .catch((e) => console.log(e))
         .then(() => {
-          notifyUpdate();
+          incrementIssuesVersion();
           onClose(false);
         });
     } else {
@@ -92,7 +92,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
         .post("/api/issue", { ...data, projectId: selectedProject?.id })
         .catch((e) => console.log(e))
         .then((res) => {
-          notifyUpdate();
+          incrementIssuesVersion();
           onClose(false);
           reset();
           setSelectedTag(getValues("type"));

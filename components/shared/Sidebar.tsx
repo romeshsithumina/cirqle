@@ -1,27 +1,18 @@
 "use client";
 
-import { useIssues } from "@/contexts/IssuesContext";
+import { useIssueContext } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { getIssues } from "@/lib/actions/getIssues";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import IssueCard from "../IssueCard";
+import EmptyState from "./EmptyState";
 import Navbar from "./Navbar";
 
-interface Issue {
-  uuid: string;
-  title: string;
-  type: string;
-  author: {
-    name: string;
-  };
-  priority: string;
-  status: string;
-}
-
 const Sidebar = () => {
-  const [issues, setIssues] = useState<Issue[]>([]);
   const { selectedProject } = useProject();
-  const { registerUpdateCallback } = useIssues();
+  const { issues, setIssues, issuesVersion } = useIssueContext();
+
+  console.log("Selected project is!: ", selectedProject);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -31,18 +22,8 @@ const Sidebar = () => {
       }
     };
 
-    fetchIssues(); // Initial fetch
-
-    const handleIssueUpdate = () => {
-      fetchIssues(); // Refetch on update
-    };
-
-    registerUpdateCallback(handleIssueUpdate); // Register for updates
-
-    return () => {
-      registerUpdateCallback(null); // Unregister on unmount
-    };
-  }, [selectedProject, registerUpdateCallback]);
+    fetchIssues();
+  }, [issuesVersion, selectedProject?.id]);
 
   console.log("Sidebar rendered");
 
@@ -53,16 +34,27 @@ const Sidebar = () => {
           <Navbar />
         </div>
         <div className="max-h-[calc(100vh-67px)] overflow-y-auto">
-          {issues?.map((issue) => (
-            <IssueCard
-              key={issue.uuid}
-              uuid={issue.uuid}
-              issueName={issue.title}
-              issueType={issue.type}
-              issueStatus={issue.status}
-              authorName={issue.author.name}
+          {issues.length > 0 ? (
+            issues.map((issue) => (
+              <IssueCard
+                key={issue.uuid}
+                uuid={issue.uuid}
+                issueName={issue.title}
+                issueType={issue.type}
+                issueStatus={issue.status}
+                authorName={issue.author.name}
+              />
+            ))
+          ) : (
+            <EmptyState
+              subtitle={
+                selectedProject
+                  ? "Looks like no issues in this project"
+                  : "Select or Create a project"
+              }
+              className="mt-28"
             />
-          ))}
+          )}
         </div>
       </div>
     </>

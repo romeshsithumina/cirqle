@@ -1,61 +1,24 @@
 "use client";
 
-import ImageDisplay from "@/components/ImageDisplay";
-import PriorityTag from "@/components/PriorityTag";
-import Tag from "@/components/Tag";
+import EmptyState from "@/components/shared/EmptyState";
 import { useProject } from "@/contexts/ProjectContext";
 
 const Page = () => {
   const { selectedProject } = useProject();
 
   if (!selectedProject)
-    return <div className="p-10">Please Select a Project first</div>;
+    return (
+      <EmptyState
+        title="No Project Selected"
+        subtitle="Try Selecting or Creating a new Project"
+      />
+    );
 
   return (
-    <div className="left-0 top-0 h-screen px-8 py-6">
-      <div className="flex flex-col">
-        <div className="flex items-center gap-5">
-          <Tag name="improvement" />
-          <div className="text-lg font-semibold">Drag and Drop Shadow</div>
-          <div className="ml-auto opacity-80">
-            <PriorityTag type="high" />
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center border-b pb-3">
-          <div className="flex flex-nowrap gap-2 text-[0.87rem]">
-            <span className="">Mark Johnson</span>
-            <span className="">·</span>
-            <span className="text-slate-600">17.01.2024 at 11:00</span>
-          </div>
-          <div className="ml-10 flex gap-4">
-            <Tag name="todo outline" clickable />
-            <Tag name="wip" selected="wip" clickable />
-            <Tag name="done outline" clickable />
-          </div>
-        </div>
-
-        <div className="mt-7 max-w-[1000px]">
-          <div className="font-medium">Issue</div>
-          <div className="mt-5 text-sm text-slate-600">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nobis odit
-            quisquam necessitatibus velit commodi architecto nisi, pariatur
-            accusantium soluta quae maiores, temporibus voluptate nulla labore
-            rem corporis magni voluptates nihil?
-          </div>
-        </div>
-        <div className="mt-7">
-          <div className="font-medium">Images</div>
-          <div className="mt-5 text-sm text-slate-600">
-            <ImageDisplay value="/assets/test.png" />
-          </div>
-        </div>
-        <div className="mt-7">
-          <div className="font-medium">Assigned to: </div>
-          <div className="mt-5 text-sm text-slate-600">Mark Rober</div>
-        </div>
-      </div>
-    </div>
+    <EmptyState
+      title="No Issue Selected"
+      subtitle="Get started by selecting or creating an issue"
+    />
   );
 };
 export default Page;

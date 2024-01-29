@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useIssues } from "@/contexts/IssuesContext";
+import { useIssueContext } from "@/contexts/IssuesContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,7 +25,7 @@ export function IssueDeleteDialog({
   onClose,
 }: IssueDeleteDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const { notifyUpdate } = useIssues();
+  const { incrementIssuesVersion } = useIssueContext();
   const router = useRouter();
 
   const handleDeleteButtonClick = async () => {
@@ -38,7 +38,7 @@ export function IssueDeleteDialog({
         setIsDeleting(false);
         onClose(false);
         router.push("/");
-        notifyUpdate();
+        incrementIssuesVersion();
       })
       .catch((e) => console.log(e));
   };
