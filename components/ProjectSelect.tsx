@@ -15,13 +15,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useIssueContext } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { getProjects } from "@/lib/actions/getProjects";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ProjectDialog from "./ProjectDialog";
-import { useRouter } from "next/navigation";
-import { useIssues } from "@/contexts/IssuesContext";
 
 interface ProjectSelectProps {
   open: boolean;
@@ -44,7 +44,7 @@ export function ProjectSelect({
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
-  const { notifyUpdate } = useIssues();
+  const { incrementIssuesVersion } = useIssueContext();
   const router = useRouter();
 
   console.log("ProjectSelect rendered");
@@ -107,7 +107,7 @@ export function ProjectSelect({
                     setOpen(false);
                     onUserSelect(project.id);
                     updateSelectedProject(project);
-                    notifyUpdate();
+                    incrementIssuesVersion();
 
                     if (currentValue !== value.toLocaleLowerCase()) {
                       router.push("/");

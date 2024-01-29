@@ -5,7 +5,7 @@ import { IssueDeleteDialog } from "@/components/IssueDeleteDialog";
 import IssueDialog from "@/components/IssueDialog";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
-import { useIssues } from "@/contexts/IssuesContext";
+import { useIssueContext } from "@/contexts/IssuesContext";
 import { convertDateFormat } from "@/lib/utils";
 import axios from "axios";
 import { usePathname } from "next/navigation";
@@ -33,7 +33,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [tagDisabled, setTagDisabled] = useState(false);
-  const { notifyUpdate } = useIssues();
+  const { incrementIssuesVersion } = useIssueContext();
   const pathname = usePathname();
 
   const handleTagSelect = async (value: string) => {
@@ -44,7 +44,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
       await axios.post(`/api/issue/${issueId}`, updatedIssue).then((res) => {
         setSelectedTag(res.data.status);
         setTagDisabled(false);
-        notifyUpdate();
+        incrementIssuesVersion();
       });
     } catch (error) {
       console.log("Error is: " + error);
