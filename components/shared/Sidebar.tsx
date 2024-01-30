@@ -7,10 +7,12 @@ import { useEffect } from "react";
 import IssueCard from "../IssueCard";
 import EmptyState from "./EmptyState";
 import Navbar from "./Navbar";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const { selectedProject } = useProject();
   const { issues, setIssues, issuesVersion } = useIssueContext();
+  const currentIssueId = usePathname().split("/").pop();
 
   console.log("Selected project is!: ", selectedProject);
 
@@ -43,6 +45,7 @@ const Sidebar = () => {
                 issueType={issue.type}
                 issueStatus={issue.status}
                 authorName={issue.author.name}
+                currentIssue={currentIssueId}
               />
             ))
           ) : (
