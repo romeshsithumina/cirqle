@@ -11,7 +11,7 @@ interface IParams {
 }
 
 const Page = ({ params }: { params: IParams }) => {
-  const [issue, setIssue] = useState();
+  const [issue, setIssue] = useState<any>();
   const { selectedProject, updateSelectedProject } = useProject();
   const { issuesVersion } = useIssueContext();
 
