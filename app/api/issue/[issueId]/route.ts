@@ -40,7 +40,8 @@ export async function POST(request: Request, { params }: { params: IParams }) {
 export async function PATCH(request: Request, { params }: { params: IParams }) {
   const body = await request.json();
 
-  const { title, description, type, priority, assignedTo, pathname } = body;
+  const { title, description, type, priority, assignedTo, imageSrc, pathname } =
+    body;
   const { issueId } = params;
 
   const updatedIssue = await prisma.issue
@@ -59,6 +60,9 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
           },
         },
       },
+      include: {
+        attachments: true,
+      },
     })
     .catch(async (e: any) => {
       console.log("Error is");
@@ -70,8 +74,37 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
 
   console.log("Updated issue is ", updatedIssue);
 
+  const issueWithAttachments = await prisma.issue.findUnique({
+    where: {
+      uuid: issueId,
+    },
+    include: {
+      attachments: true,
+    },
+  });
+
+  const updatedAttachment = await prisma.attachment
+    .update({
+      where: {
+        id: issueWithAttachments.attachments[0].id,
+      },
+      data: {
+        url: imageSrc,
+        filename: imageSrc.split("/")?.pop(),
+        mimetype: "image",
+      },
+    })
+    .catch(async (e: any) => {
+      console.log(e);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+
+  console.log("Updated attachment is ", updatedAttachment);
+
   revalidatePath(pathname);
-  return NextResponse.json(updatedIssue);
+  return NextResponse.json({ ...updatedIssue, attachment: updatedAttachment });
 }
 
 export async function DELETE(
