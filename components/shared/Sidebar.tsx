@@ -31,7 +31,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className=" w-[400px] border-r-[1px]">
+      <div className="w-[400px] border-r-[1px]">
         <div className="w-full">
           <Navbar />
         </div>

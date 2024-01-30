@@ -36,7 +36,7 @@ const IssueCard = ({
       >
         <div className="flex h-full flex-col justify-center pl-6">
           <div
-            className={`font-medium ${
+            className={`line-clamp-1 w-64 overflow-hidden text-ellipsis font-medium ${
               currentIssue === uuid && "text-red-primary"
             }`}
           >
