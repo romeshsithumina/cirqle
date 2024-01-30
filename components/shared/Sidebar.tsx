@@ -18,7 +18,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     const fetchIssues = async () => {
-      const res = await getIssues(selectedProject?.id);
+      const res: any = await getIssues(selectedProject?.id);
       if (res) {
         setIssues(res);
       }
