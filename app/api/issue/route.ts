@@ -37,7 +37,7 @@ export async function POST(request: Request) {
         type,
         author: {
           connect: {
-            id: currentUser.id,
+            id: currentUser?.id,
           },
         },
         assignedTo: {
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       data: {
         issue: {
           connect: {
-            id: newIssue.id,
+            id: newIssue?.id,
           },
         },
         url: imageSrc,

@@ -86,7 +86,7 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
   const updatedAttachment = await prisma.attachment
     .update({
       where: {
-        id: issueWithAttachments.attachments[0].id,
+        id: issueWithAttachments?.attachments[0].id,
       },
       data: {
         url: imageSrc,
@@ -113,18 +113,19 @@ export async function DELETE(
 ) {
   const { issueId } = params;
 
-  const { id } = await prisma.issue
-    .findUnique({
-      where: {
-        uuid: issueId,
-      },
-    })
-    .catch(async (e: any) => {
-      console.log(e.response.data);
-    })
-    .finally(async () => {
-      await prisma.$disconnect();
-    });
+  const { id } =
+    (await prisma.issue
+      .findUnique({
+        where: {
+          uuid: issueId,
+        },
+      })
+      .catch(async (e: any) => {
+        console.log(e.response.data);
+      })
+      .finally(async () => {
+        await prisma.$disconnect();
+      })) ?? {};
 
   await prisma.attachment
     .deleteMany({
