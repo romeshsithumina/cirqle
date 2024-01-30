@@ -40,7 +40,7 @@ export function ProjectSelect({
   onUserSelect,
 }: ProjectSelectProps) {
   const { selectedProject, updateSelectedProject } = useProject();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<Project>();
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
@@ -53,10 +53,13 @@ export function ProjectSelect({
     const fetchProjects = async () => {
       const allProjects = await getProjects();
       setProjects(allProjects);
-      if (selectedProject) setValue(selectedProject.name);
     };
     fetchProjects();
-  }, [projectCreated, selectedProject]);
+  }, [projectCreated]);
+
+  useEffect(() => {
+    if (selectedProject) setValue(selectedProject);
+  }, [selectedProject]);
 
   return (
     <>
@@ -74,7 +77,7 @@ export function ProjectSelect({
             aria-expanded={open}
             className="max-w-[400px] justify-between text-ellipsis text-lg font-medium"
           >
-            {value ? capitalizeFirstLetter(value) : "Project..."}
+            {value?.name ? capitalizeFirstLetter(value?.name) : "Project..."}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -103,13 +106,15 @@ export function ProjectSelect({
                   key={project.id}
                   value={project.name}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setValue(
+                      currentValue === value?.name ? undefined : project
+                    );
                     setOpen(false);
                     onUserSelect(project.id);
                     updateSelectedProject(project);
                     incrementIssuesVersion();
 
-                    if (currentValue !== value.toLocaleLowerCase()) {
+                    if (project.id !== value?.id) {
                       router.push("/");
                     }
                   }}
@@ -119,10 +124,7 @@ export function ProjectSelect({
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value.toLocaleLowerCase() ===
-                        project.name.toLocaleLowerCase()
-                        ? "opacity-100"
-                        : "opacity-0"
+                      value?.id === project.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
