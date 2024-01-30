@@ -14,21 +14,21 @@ export function capitalizeFirstLetter(sentence: string) {
 }
 
 export function convertDateFormat(inputDate: string): string {
-  const options: Intl.DateTimeFormatOptions = {
+  const optionsDate: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+  };
+
+  const optionsTime: Intl.DateTimeFormatOptions = {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
-    timeZone: "UTC",
+    hour12: true,
   };
 
   const date = new Date(inputDate);
-  const formattedDate = date.toLocaleString("en-GB", options);
+  const formattedDate = date.toLocaleDateString("en-GB", optionsDate);
+  const formattedTime = date.toLocaleTimeString("en-US", optionsTime);
 
-  const dateArray = formattedDate.split(" ");
-  const [day, time] = dateArray;
-
-  return `${day.replace(/\//g, ".")} at ${time}`;
+  return `${formattedDate.replace(/\//g, ".")} at ${formattedTime}`;
 }
