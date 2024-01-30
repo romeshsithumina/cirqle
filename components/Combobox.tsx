@@ -31,8 +31,8 @@ interface User {
   email: string;
   password: string | null;
   role: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export function Combobox({
