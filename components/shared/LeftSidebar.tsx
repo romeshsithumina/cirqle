@@ -1,6 +1,8 @@
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { PiDotsNineBold } from "react-icons/pi";
+import { CiFolderOn } from "react-icons/ci";
 
 const LeftSidebar = () => {
   return (
@@ -10,10 +12,9 @@ const LeftSidebar = () => {
           <Image alt="logo" src="/assets/logo.svg" width={40} height={40} />
         </Link>
       </div>
-      <div>
-        <div className="">icon1</div>
-        <div className="">icon2</div>
-        <div className="">icon3</div>
+      <div className="flex flex-col gap-10">
+        <PiDotsNineBold color="#f53162" size={29} />
+        <CiFolderOn color="black" opacity={0.4} size={29} />
       </div>
       <div>
         <SignedIn>

@@ -54,6 +54,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
     setValue,
     getValues,
     reset,
+    watch,
     clearErrors,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
@@ -72,6 +73,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   const { selectedProject } = useProject();
   const pathname = usePathname();
   const router = useRouter();
+  const imageSrc = watch("imageSrc");
 
   const onSubmit: SubmitHandler<FormFields> = async (data: any) => {
     console.log("submitted data are\n", data);
@@ -125,7 +127,11 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
   };
 
   const handleImageChange = (value: string) => {
-    setValue("imageSrc", value);
+    setValue("imageSrc", value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
   };
 
   return (
@@ -207,10 +213,7 @@ const IssueDialog = ({ open, issue, onClose }: IssueDialogProps) => {
               />
             </div>
             <div className="col-start-2 row-span-3 row-start-1">
-              <ImageUpload
-                value={getValues("imageSrc")}
-                onChange={handleImageChange}
-              />
+              <ImageUpload value={imageSrc} onChange={handleImageChange} />
             </div>
             <div className="col-start-2 row-start-4 w-full">
               <TypeSelect
