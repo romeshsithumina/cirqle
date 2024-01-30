@@ -73,7 +73,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
         id={issue.uuid}
         onClose={setDeleteDialogOpen}
       />
-      <div className="left-0 top-0 h-screen px-8 py-6">
+      <div className="left-0 top-0 h-screen max-w-[calc(100vw-480px)] px-8  py-6">
         <div className="flex flex-col">
           <div className="flex items-center gap-5">
             <Tag name={issue.type} />
@@ -126,7 +126,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
             </div>
           </div>
 
-          <div className="mt-7 max-w-[1000px]">
+          <div className="mt-7">
             <div className="font-medium">Issue</div>
             <div className="mt-5 text-sm text-slate-600">
               {issue.description}
