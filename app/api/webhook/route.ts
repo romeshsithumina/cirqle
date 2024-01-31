@@ -3,7 +3,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -58,13 +58,16 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, first_name, last_name } = evt.data;
 
     // Create a new user in database
-    const dbUser = await axios.post(`${serverURL}/api/user`, {
-      clerkId: id,
-      name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
-      email: email_addresses[0].email_address,
-      picture: image_url,
-    });
-
+    const dbUserResponse: AxiosResponse = await axios.post(
+      `${serverURL}/api/user`,
+      {
+        clerkId: id,
+        name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
+        email: email_addresses[0].email_address,
+        picture: image_url,
+      }
+    );
+    const dbUser = dbUserResponse.data;
     return NextResponse.json({ message: "OK", user: dbUser });
   }
 
@@ -72,15 +75,18 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, first_name, last_name } = evt.data;
 
     // Update a user in database
-    const dbUser = await axios.patch(`${serverURL}/api/user/${id}`, {
-      clerkId: id,
-      updateData: {
-        name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
-        email: email_addresses[0].email_address,
-        picture: image_url,
-      },
-    });
-
+    const dbUserResponse: AxiosResponse = await axios.patch(
+      `${serverURL}/api/user/${id}`,
+      {
+        clerkId: id,
+        updateData: {
+          name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
+          email: email_addresses[0].email_address,
+          picture: image_url,
+        },
+      }
+    );
+    const dbUser = dbUserResponse.data;
     return NextResponse.json({ message: "OK", user: dbUser });
   }
 
@@ -88,8 +94,11 @@ export async function POST(req: Request) {
     const { id } = evt.data;
 
     // Delete user in database
-    const deletedUser = await axios.delete(`${serverURL}/api/user/${id}`);
+    const deletedUserResponse: AxiosResponse = await axios.delete(
+      `${serverURL}/api/user/${id}`
+    );
 
+    const deletedUser = deletedUserResponse.data;
     return NextResponse.json({ message: "OK", user: deletedUser });
   }
 
