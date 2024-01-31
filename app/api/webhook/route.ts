@@ -67,8 +67,7 @@ export async function POST(req: Request) {
         picture: image_url,
       }
     );
-    const dbUser = dbUserResponse.data;
-    return NextResponse.json({ message: "OK", user: dbUser });
+    return NextResponse.json(dbUserResponse.data);
   }
 
   if (eventType === "user.updated") {
@@ -83,8 +82,7 @@ export async function POST(req: Request) {
         picture: image_url,
       }
     );
-    const dbUser = dbUserResponse.data;
-    return NextResponse.json({ message: "OK", user: dbUser });
+    return NextResponse.json(dbUserResponse.data);
   }
 
   if (eventType === "user.deleted") {
@@ -95,8 +93,7 @@ export async function POST(req: Request) {
       `${serverURL}/api/user/${id}`
     );
 
-    const deletedUser = deletedUserResponse.data;
-    return NextResponse.json({ message: "OK", user: deletedUser });
+    return NextResponse.json(deletedUserResponse.data);
   }
 
   return new Response("", { status: 200 });

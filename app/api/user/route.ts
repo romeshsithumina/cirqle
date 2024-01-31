@@ -24,5 +24,5 @@ export async function POST(request: Request) {
 
   console.log(newUser);
 
-  return NextResponse.json(newUser);
+  return NextResponse.json({ message: "OK", newUser });
 }

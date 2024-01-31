@@ -31,7 +31,7 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
 
   console.log("Updated user is ", updatedUser);
 
-  return NextResponse.json(updatedUser);
+  return NextResponse.json({ message: "OK", updatedUser });
 }
 
 export async function DELETE(
@@ -81,7 +81,7 @@ export async function DELETE(
       `User with ID ${clerkId} and associated issues and attachments deleted successfully.`
     );
 
-    return NextResponse.json(deletedUser);
+    return NextResponse.json({ message: "OK", deletedUser });
   } catch (error) {
     console.error(`Error deleting user: ${error}`);
   } finally {
