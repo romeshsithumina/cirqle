@@ -31,11 +31,12 @@ model Issue {
 
 model User {
   id             Int      @id @default(autoincrement())
-  clerkID        String
+  clerkID        String   @unique
   name           String
   email          String   @unique
   password       String?
   role           String
+  picture        String
   issues         Issue[]  @relation(name: "Author")
   assignedIssues Issue[]  @relation(name: "AssignedTo")
   createdAt      DateTime @default(now())
