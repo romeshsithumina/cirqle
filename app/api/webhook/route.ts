@@ -52,12 +52,13 @@ export async function POST(req: Request) {
   }
 
   const eventType = evt.type;
+  const serverURL = process.env.NEXT_SERVER_URL;
 
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, last_name } = evt.data;
 
     // Create a new user in database
-    const dbUser = await axios.post("/api/user", {
+    const dbUser = await axios.post(`${serverURL}/api/user`, {
       clerkId: id,
       name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
       email: email_addresses[0].email_address,
@@ -71,14 +72,13 @@ export async function POST(req: Request) {
     const { id, email_addresses, image_url, first_name, last_name } = evt.data;
 
     // Update a user in database
-    const dbUser = await axios.patch(`/api/user/${id}`, {
+    const dbUser = await axios.patch(`${serverURL}/api/user/${id}`, {
       clerkId: id,
       updateData: {
         name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
         email: email_addresses[0].email_address,
         picture: image_url,
       },
-      path: `/profile/${id}`,
     });
 
     return NextResponse.json({ message: "OK", user: dbUser });
@@ -88,9 +88,7 @@ export async function POST(req: Request) {
     const { id } = evt.data;
 
     // Delete user in database
-    const deletedUser = await axios.post(`/api/user/${id}`, {
-      clerkId: id!,
-    });
+    const deletedUser = await axios.delete(`${serverURL}/api/user/${id}`);
 
     return NextResponse.json({ message: "OK", user: deletedUser });
   }
