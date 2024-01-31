@@ -38,9 +38,19 @@ export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
+  console.log("params are: ", params);
   const { clerkId } = params;
+  console.log("clerkid is: ", clerkId);
 
   try {
+    if (!clerkId) {
+      console.log("Invalid clerkId provided.");
+      return NextResponse.json(
+        { error: "Invalid clerkId provided." },
+        { status: 400 }
+      );
+    }
+
     // Find the user by ID along with their issues and attachments
     const user = await prisma.user.findUnique({
       where: { clerkID: clerkId },

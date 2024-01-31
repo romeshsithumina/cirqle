@@ -87,6 +87,7 @@ export async function POST(req: Request) {
 
   if (eventType === "user.deleted") {
     const { id } = evt.data;
+    console.log("id is ", id);
 
     // Delete user in database
     const deletedUserResponse: AxiosResponse = await axios.delete(
