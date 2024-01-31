@@ -31,7 +31,7 @@ model Issue {
 
 model User {
   id             Int      @id @default(autoincrement())
-  clerkID        String
+  clerkID        String   @unique
   name           String
   email          String   @unique
   password       String?
