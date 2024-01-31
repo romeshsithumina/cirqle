@@ -25,7 +25,7 @@ export async function POST(request: Request, { params }: { params: IParams }) {
     })
     .catch(async (e: any) => {
       console.log("Error is");
-      console.log(e.response.data);
+      console.log(e);
     })
     .finally(async () => {
       await prisma.$disconnect();
@@ -66,7 +66,7 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
     })
     .catch(async (e: any) => {
       console.log("Error is");
-      console.log(e.response.data);
+      console.log(e);
     })
     .finally(async () => {
       await prisma.$disconnect();
@@ -121,7 +121,7 @@ export async function DELETE(
         },
       })
       .catch(async (e: any) => {
-        console.log(e.response.data);
+        console.log(e);
       })
       .finally(async () => {
         await prisma.$disconnect();
@@ -134,7 +134,7 @@ export async function DELETE(
       },
     })
     .catch(async (e: any) => {
-      console.log(e.response.data);
+      console.log(e);
     })
     .finally(async () => {
       await prisma.$disconnect();
@@ -148,7 +148,7 @@ export async function DELETE(
     })
     .catch(async (e: any) => {
       console.log("Error is");
-      console.log(e.response.data);
+      console.log(e);
     })
     .finally(async () => {
       await prisma.$disconnect();

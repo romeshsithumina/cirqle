@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       },
     })
     .catch(async (e: any) => {
-      console.log(e.response.data);
+      console.log(e);
     })
     .finally(async () => {
       await prisma.$disconnect();
