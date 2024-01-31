@@ -10,6 +10,9 @@ export default authMiddleware({
     "/issue/:id",
     "/api/issue/:id",
     "/api/project",
+    "/api/user",
+    "/api/user/:id",
+    "/api/webhook",
   ],
 });
 
