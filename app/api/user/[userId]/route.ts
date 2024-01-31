@@ -1,4 +1,5 @@
 import prisma from "@/lib/prismadb";
+import { NextResponse } from "next/server";
 
 interface IParams {
   clerkId: string;
@@ -30,7 +31,7 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
 
   console.log("Updated user is ", updatedUser);
 
-  return updatedUser;
+  return NextResponse.json(updatedUser);
 }
 
 export async function DELETE(
@@ -80,7 +81,7 @@ export async function DELETE(
       `User with ID ${clerkId} and associated issues and attachments deleted successfully.`
     );
 
-    return deletedUser;
+    return NextResponse.json(deletedUser);
   } catch (error) {
     console.error(`Error deleting user: ${error}`);
   } finally {

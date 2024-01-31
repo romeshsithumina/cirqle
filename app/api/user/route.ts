@@ -1,4 +1,5 @@
 import prisma from "@/lib/prismadb";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -23,5 +24,5 @@ export async function POST(request: Request) {
 
   console.log(newUser);
 
-  return newUser;
+  return NextResponse.json(newUser);
 }
