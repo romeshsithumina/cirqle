@@ -45,6 +45,7 @@ const Sidebar = () => {
                 issueType={issue.type}
                 issueStatus={issue.status}
                 authorName={issue.author.name}
+                authorPicture={issue.author.picture}
                 currentIssue={currentIssueId}
               />
             ))

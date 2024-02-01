@@ -9,9 +9,9 @@ interface Issue {
   priority: "low" | "medium" | "high";
   type: "bug" | "feature" | "improvement";
   createdAt: Date;
-  author: { name: string };
+  author: { name: string; picture: string };
   project: { title: string };
-  assignedTo: { id: number; name: string };
+  assignedTo: { id: number; name: string; picture: string };
   attachments: [{ id: number; url: string }];
 }
 
