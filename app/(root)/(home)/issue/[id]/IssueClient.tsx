@@ -22,7 +22,7 @@ interface IssueClientProps {
     priority: "low" | "medium" | "high";
     type: "bug" | "feature" | "improvement";
     createdAt: Date;
-    author: { name: string };
+    author: { name: string; picture: string };
     project: { title: string };
     assignedTo: { id: number; name: string; picture: string };
     attachments: [{ id: number; url: string }];
@@ -86,7 +86,13 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
 
           <div className="mt-4 flex items-center border-b pb-3">
             <div className="flex flex-nowrap gap-2 text-[0.87rem]">
-              <span className="">{issue.author.name}</span>
+              <span className="flex items-center gap-2">
+                <UserAvatar
+                  imageSrc={issue.author.picture}
+                  className="h-5 w-5"
+                />
+                {issue.author.name}
+              </span>
               <span className="">·</span>
               <span className="text-slate-600">
                 {convertDateFormat(issue.createdAt.toISOString())}
@@ -141,7 +147,7 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
           </div>
           <div className="mt-7">
             <div className="font-medium">Assigned to: </div>
-            <div className="mt-5 text-sm text-slate-600">
+            <div className="mt-5 flex items-center gap-3 text-sm text-slate-600">
               <UserAvatar
                 imageSrc={issue.assignedTo.picture}
                 className="h-7 w-7"
