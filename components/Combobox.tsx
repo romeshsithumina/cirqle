@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getDevelopers } from "@/lib/actions/getUsers";
+import UserAvatar from "./UserAvatar";
 
 interface ComboboxProps {
   currentValue?: number;
@@ -31,6 +32,7 @@ interface User {
   email: string;
   password: string | null;
   role: string;
+  picture?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -95,11 +97,17 @@ export function Combobox({
                   }
                 }}
               >
-                {user.name}
+                <span className="flex items-center gap-4">
+                  <UserAvatar imageSrc={user.picture} className="h-7 w-7" />
+                  {user.name}
+                </span>
+
                 <CheckIcon
                   className={cn(
                     "ml-auto h-4 w-4",
-                    value === user.name ? "opacity-100" : "opacity-0"
+                    value?.toLowerCase() === user.name.toLowerCase()
+                      ? "opacity-100"
+                      : "opacity-0"
                   )}
                 />
               </CommandItem>

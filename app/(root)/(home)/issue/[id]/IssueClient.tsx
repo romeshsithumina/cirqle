@@ -5,6 +5,7 @@ import { IssueDeleteDialog } from "@/components/IssueDeleteDialog";
 import IssueDialog from "@/components/IssueDialog";
 import PriorityTag from "@/components/PriorityTag";
 import Tag from "@/components/Tag";
+import UserAvatar from "@/components/UserAvatar";
 import { useIssueContext } from "@/contexts/IssuesContext";
 import { convertDateFormat } from "@/lib/utils";
 import axios from "axios";
@@ -23,7 +24,7 @@ interface IssueClientProps {
     createdAt: Date;
     author: { name: string };
     project: { title: string };
-    assignedTo: { id: number; name: string };
+    assignedTo: { id: number; name: string; picture: string };
     attachments: [{ id: number; url: string }];
   };
 }
@@ -141,6 +142,10 @@ const IssueClient: React.FC<IssueClientProps> = ({ issue }) => {
           <div className="mt-7">
             <div className="font-medium">Assigned to: </div>
             <div className="mt-5 text-sm text-slate-600">
+              <UserAvatar
+                imageSrc={issue.assignedTo.picture}
+                className="h-7 w-7"
+              />
               {issue.assignedTo.name}
             </div>
           </div>
