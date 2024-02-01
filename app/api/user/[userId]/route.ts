@@ -4,19 +4,22 @@ import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 interface IParams {
-  clerkId: string;
+  userId: string;
 }
 
-export async function PATCH(request: Request, { params }: { params: IParams }) {
+export async function PATCH(request: Request, params: IParams) {
   const body = await request.json();
 
+  console.log("params are: ", params);
+  const { userId: clerkID } = params;
+  console.log("clerkid is: ", clerkID);
+
   const { name, email, picture } = body;
-  const { clerkId } = params;
 
   const updatedUser = await prisma.user
     .update({
       where: {
-        clerkID: clerkId,
+        clerkID,
       },
       data: {
         name,
@@ -36,16 +39,13 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
   return NextResponse.json({ message: "OK", updatedUser });
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: IParams }
-) {
+export async function DELETE(request: Request, params: IParams) {
   console.log("params are: ", params);
-  const { clerkId } = params;
-  console.log("clerkid is: ", clerkId);
+  const { userId: clerkID } = params;
+  console.log("clerkid is: ", clerkID);
 
   try {
-    if (!clerkId) {
+    if (!clerkID) {
       console.log("Invalid clerkId provided.");
       return NextResponse.json(
         { error: "Invalid clerkId provided." },
@@ -55,7 +55,7 @@ export async function DELETE(
 
     // Find the user by ID along with their issues and attachments
     const user = await prisma.user.findUnique({
-      where: { clerkID: clerkId },
+      where: { clerkID },
       include: {
         issues: {
           include: {
@@ -66,7 +66,7 @@ export async function DELETE(
     });
 
     if (!user) {
-      console.log(`User with ID ${clerkId} not found.`);
+      console.log(`User with ID ${clerkID} not found.`);
       return;
     }
 
@@ -86,11 +86,11 @@ export async function DELETE(
 
     // Delete the user
     const deletedUser = await prisma.user.delete({
-      where: { clerkID: clerkId },
+      where: { clerkID },
     });
 
     console.log(
-      `User with ID ${clerkId} and associated issues and attachments deleted successfully.`
+      `User with ID ${clerkID} and associated issues and attachments deleted successfully.`
     );
 
     return NextResponse.json({ message: "OK", deletedUser });
