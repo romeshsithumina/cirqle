@@ -4,14 +4,14 @@ import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 interface IParams {
-  userId: string;
+  params: { userId: string };
 }
 
 export async function PATCH(request: Request, params: IParams) {
   const body = await request.json();
 
   console.log("params are: ", params);
-  const { userId: clerkID } = params;
+  const { userId: clerkID } = params.params;
   console.log("clerkid is: ", clerkID);
 
   const { name, email, picture } = body;
@@ -41,7 +41,7 @@ export async function PATCH(request: Request, params: IParams) {
 
 export async function DELETE(request: Request, params: IParams) {
   console.log("params are: ", params);
-  const { userId: clerkID } = params;
+  const { userId: clerkID } = params.params;
   console.log("clerkid is: ", clerkID);
 
   try {
