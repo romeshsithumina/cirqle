@@ -3,19 +3,19 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import { customAlphabet } from "nanoid";
+import { auth } from "@clerk/nextjs";
 
 export async function POST(request: Request) {
-  const currentUser = await prisma.user
-    .findUnique({
-      where: {
-        id: 2,
-      },
-    })
-    .catch((e: any) => console.log(e));
-
   const alphabet =
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   const nanoid = customAlphabet(alphabet, 20);
+
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({
+      error: "Not logged in.",
+    });
+  }
 
   const body = await request.json();
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         type,
         author: {
           connect: {
-            id: currentUser?.id,
+            clerkID: userId,
           },
         },
         assignedTo: {
