@@ -15,7 +15,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useIssueContext } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { getProjects } from "@/lib/actions/getProjects";
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
@@ -44,10 +43,7 @@ export function ProjectSelect({
   const [projectDialogOpen, setProjectDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>();
   const [projectCreated, setProjectCreated] = useState(false);
-  const { incrementIssuesVersion } = useIssueContext();
   const router = useRouter();
-
-  console.log("ProjectSelect rendered");
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -86,7 +82,7 @@ export function ProjectSelect({
             <CommandInput placeholder="Search projects..." className="h-9" />
             <CommandGroup>
               <Button
-                className="w-full border border-slate-300 bg-white"
+                className="w-full border border-slate-300 bg-white hover:border-red-primary hover:text-red-primary"
                 onClick={() => {
                   setProjectDialogOpen(true);
                   setOpen(false);
@@ -111,11 +107,10 @@ export function ProjectSelect({
                     );
                     setOpen(false);
                     onUserSelect(project.id);
-                    updateSelectedProject(project);
-                    incrementIssuesVersion();
 
                     if (project.id !== value?.id) {
                       router.push("/");
+                      updateSelectedProject(project);
                     }
                   }}
                   className="hover:text-red-primary"
