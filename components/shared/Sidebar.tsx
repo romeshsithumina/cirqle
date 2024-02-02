@@ -12,6 +12,7 @@ import Navbar from "./Navbar";
 
 const Sidebar = () => {
   const { selectedProject } = useProject();
+  const [currentProject, setCurrentProject] = useState(selectedProject);
   const { issues, setIssues, issuesVersion } = useIssueContext();
   const [isFetching, setIsFetching] = useState(false);
   const currentIssueId = usePathname().split("/").pop();
@@ -20,10 +21,14 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        if (isInitialRender.current) {
-          setIsFetching(true); // Only set to true for initial render
+        if (
+          isInitialRender.current ||
+          currentProject?.id !== selectedProject?.id
+        ) {
+          setIsFetching(true); // Set to true for initial render or project change
         }
         const res: any = await getIssues(selectedProject?.id);
+        setCurrentProject(selectedProject);
         if (res) {
           setIssues(res);
         }
