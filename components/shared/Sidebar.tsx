@@ -3,41 +3,51 @@
 import { useIssueContext } from "@/contexts/IssuesContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { getIssues } from "@/lib/actions/getIssues";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import IssueCard from "../IssueCard";
+import IssueCardLoading from "../IssueCardLoading";
 import EmptyState from "./EmptyState";
 import Navbar from "./Navbar";
-import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const { selectedProject } = useProject();
   const { issues, setIssues, issuesVersion } = useIssueContext();
+  const [isFetching, setIsFetching] = useState(false);
   const currentIssueId = usePathname().split("/").pop();
-
-  console.log("Selected project is!: ", selectedProject);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
     const fetchIssues = async () => {
-      const res: any = await getIssues(selectedProject?.id);
-      if (res) {
-        setIssues(res);
+      try {
+        if (isInitialRender.current) {
+          setIsFetching(true); // Only set to true for initial render
+        }
+        const res: any = await getIssues(selectedProject?.id);
+        if (res) {
+          setIssues(res);
+        }
+      } finally {
+        setIsFetching(false);
+        isInitialRender.current = false; // Mark as no longer initial render
       }
     };
 
     fetchIssues();
   }, [issuesVersion, selectedProject?.id]);
 
-  console.log("Sidebar rendered");
-
   return (
-    <>
-      <div className="w-[400px] border-r-[1px]">
-        <div className="w-full">
-          <Navbar />
-        </div>
-        <div className="max-h-[calc(100vh-67px)] overflow-y-auto">
-          {issues.length > 0 ? (
-            issues.map((issue) => (
+    <div className="w-[400px] border-r-[1px]">
+      <div className="w-full">
+        <Navbar />
+      </div>
+      <div className="max-h-[calc(100vh-67px)] overflow-y-auto">
+        {isFetching &&
+          Array.from({ length: 7 }).map((_, index) => (
+            <IssueCardLoading key={index} />
+          ))}
+        {!isFetching && issues
+          ? issues.map((issue) => (
               <IssueCard
                 key={issue.uuid}
                 uuid={issue.uuid}
@@ -49,19 +59,19 @@ const Sidebar = () => {
                 currentIssue={currentIssueId}
               />
             ))
-          ) : (
-            <EmptyState
-              subtitle={
-                selectedProject
-                  ? "Looks like no issues in this project"
-                  : "Select or Create a project"
-              }
-              className="mt-28"
-            />
-          )}
-        </div>
+          : null}
+        {!isFetching && issues.length === 0 && (
+          <EmptyState
+            subtitle={
+              selectedProject
+                ? "Looks like no issues in this project"
+                : "Select or Create a project"
+            }
+            className="mt-28"
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
