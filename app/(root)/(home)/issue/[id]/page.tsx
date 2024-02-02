@@ -5,6 +5,7 @@ import { useProject } from "@/contexts/ProjectContext";
 import { getIssueById } from "@/lib/actions/getIssueById";
 import { useEffect, useState } from "react";
 import IssueClient from "./IssueClient";
+import IssueClientLoading from "./IssueClientLoading";
 
 interface IParams {
   id?: string;
@@ -30,7 +31,7 @@ const Page = ({ params }: { params: IParams }) => {
     fetchIssue();
   }, [issuesVersion, params]);
 
-  if (!issue) return <div className="">Loading..</div>;
+  if (!issue) return <IssueClientLoading />;
 
   return <IssueClient issue={issue} />;
 };
