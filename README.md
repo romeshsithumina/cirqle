@@ -1,8 +1,81 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# cirQle: Streamline Issue Tracking with Modernity and Efficiency
+
+## Overview:
+
+![cirQle demo iamge](/public/assets/demo/cirqle-demo.png)
+
+cirQle is a robust and user-friendly bug tracking system built on cutting-edge technologies to empower collaboration and streamline issue management. It leverages the power of Next.js, React, Tailwind CSS, and more to provide a modern UI design and intuitive functionality.
+
+## Key Features:
+
+- Issue Creation and Management:
+  - Users can effortlessly create, edit, and delete issues with ease.
+  - Comprehensive details can be specified, including title, description, image, type, assigned user, and priority.
+  - A modern interface empowers clear and concise issue reporting.
+- Project Organization:
+  - Create and manage distinct projects within the application, enabling focused issue tracking for various endeavors.
+- Modern UI Design:
+  - Visually appealing user interface.
+  - Intuitive navigation and clear information hierarchies enhance usability.
+- Technical Stack:
+  - Frontend: Next.js, React, Tailwind CSS, React Hook Form, Zod
+  - Backend: Next.js, Node.js, TypeScript, Prisma, SQL Server
+  - Authentication: Clerk
+  - API Requests: Axios
+  - Image Management: Cloudinary
 
 ## Getting Started
 
-First, run the development server:
+1. Prerequisites:
+
+   - [Node.js](https://nodejs.org/en) (version 14 or later) and npm, pnpm, yarn, or bun.
+   - A SQL Server [Express] database (see [Get Started](https://learn.microsoft.com/en-us/sql/relational-databases/tutorial-getting-started-with-the-database-engine?view=sql-server-ver16))
+   - A [Clerk account](https://dashboard.clerk.com/sign-in)
+   - A [Cloudinary account](https://cloudinary.com/) (optional, for image uploads)
+
+2. Clone the Repository:
+
+```bash
+git clone https://github.com/romeshsithumina/cirqle.git
+cd cirqle
+```
+
+3. Install Dependencies:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+4. Copy .env.local.example to .env.local and .env.example to .env and Configure Environment Variables:
+
+```bash
+cp .env.local.example .env.local
+cp .env.example .env
+```
+
+- Add the following environment variables, replacing placeholders with your actual values:
+
+```bash
+DATABASE_URL=<your-database-url>
+CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
+CLERK_SECRET_KEY=<your-clerk-secret-key>
+NEXT_CLERK_WEBHOOK_SECRET=<your-clerk-webhook-secret>
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
+```
+
+5. Initialize Prisma:
+
+```bash
+npx prisma generate
+```
+
+6. Start the Development Server:
 
 ```bash
 npm run dev
@@ -14,23 +87,8 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Access the application in your browser at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Acknowledgements
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- UI Design inspired by Franta Toman @[Dribble](https://dribbble.com/shots/17185374-Cirqle-App)
