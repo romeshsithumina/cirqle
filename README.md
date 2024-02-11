@@ -91,4 +91,4 @@ Access the application in your browser at [http://localhost:3000](http://localho
 
 ## Acknowledgements
 
-- UI Design inspired by Franta Toman @[Dribble](https://dribbble.com/shots/14241404-Opinio-UI-Design)
+- UI Design inspired by Franta Toman @[Dribbble](https://dribbble.com/shots/14241404-Opinio-UI-Design)
